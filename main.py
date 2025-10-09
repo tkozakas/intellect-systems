@@ -1,4 +1,5 @@
 import os
+import time
 from typing import Literal
 
 from datasets import load_dataset, Dataset
@@ -13,6 +14,7 @@ DATASET_NAME = "yale-nlp/FOLIO"
 MODEL_NAME = "gemini-2.5-flash"
 DATA_SPLIT = "train"
 NUM_SAMPLES = 5
+REQUESTS_DELAY_SECONDS = 2
 
 
 class LogicAnalysis(BaseModel):
@@ -42,6 +44,7 @@ def evaluate_with_gemini_structured(client: genai.Client, request_config: types.
         config=request_config
     )
 
+    time.sleep(REQUESTS_DELAY_SECONDS)  # To avoid rate limiting
     return response.parsed
 
 def run_evaluation(client: genai.Client, request_config: types.GenerateContentConfig, dataset_sample: Dataset) -> tuple[int, int]:
