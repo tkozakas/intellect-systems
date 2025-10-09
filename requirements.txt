@@ -1,5 +1,0 @@
-pydantic
-matplotlib
-pandas
-protobuf
-datasets
