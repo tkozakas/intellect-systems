@@ -55,7 +55,6 @@ def evaluate_with_gemini_structured(
             contents=prompt,
             config=request_config
         )
-        # Use response.parsed with genai.Client
         parsed_response = response.parsed
         print(f"    -> Model Conclusion: {parsed_response.final_answer} (Actual: {actual_answer})")
         time.sleep(REQUESTS_DELAY_SECONDS)
