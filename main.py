@@ -16,10 +16,10 @@ from pydantic import BaseModel
 HF_TOKEN_ENV_VAR = "HF_TOKEN"
 GEMINI_API_KEY_ENV_VAR = "GEMINI_API_KEY"
 DATASET_NAME = "yale-nlp/FOLIO"
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = "gemini-2.5-pro"
 DATA_SPLIT = "train"
 NUM_SAMPLES = 20
-REQUESTS_DELAY_SECONDS = 0.5
+REQUESTS_DELAY_SECONDS = 1
 
 
 class LogicAnalysis(BaseModel):
@@ -138,6 +138,8 @@ def main():
     loaded_folio_dataset = get_folio_dataset(token=hf_token)
     folio_dataset = loaded_folio_dataset.filter(lambda example: example['label'] != 'Uncertain')
     folio_sample = folio_dataset.select(range(NUM_SAMPLES))
+    print(folio_sample.to_pandas())
+
     print(f"Dataset ready. Running evaluations on {NUM_SAMPLES} samples.")
 
     client = genai.Client(api_key=gemini_api_key)
