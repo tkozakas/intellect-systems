@@ -19,7 +19,8 @@ DATASET_NAME = "yale-nlp/FOLIO"
 MODEL_NAME = "gemini-2.5-pro"
 DATA_SPLIT = "train"
 NUM_SAMPLES = 20
-REQUESTS_DELAY_SECONDS = 1
+MAX_RETRIES = 5
+REQUESTS_DELAY_SECONDS = 5
 
 
 class LogicAnalysis(BaseModel):
@@ -49,24 +50,39 @@ def evaluate_with_gemini_structured(
         "{conclusion}"
         """
     print(f"  Premise: {premises[:100]}...")
-    try:
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            contents=prompt,
-            config=request_config
-        )
-        parsed_response = response.parsed
-        print(f"    -> Model Conclusion: {parsed_response.final_answer} (Actual: {actual_answer})")
-        time.sleep(REQUESTS_DELAY_SECONDS)
-        return parsed_response
-    except exceptions.GoogleAPICallError as e:
-        print(f"    !! API Call Error: {e.message}")
-        time.sleep(REQUESTS_DELAY_SECONDS)
-        return None
-    except Exception as e:
-        print(f"    !! An unexpected error occurred: {e}")
-        time.sleep(REQUESTS_DELAY_SECONDS)
-        return None
+
+    max_retries = MAX_RETRIES
+    base_delay = REQUESTS_DELAY_SECONDS
+
+    for attempt in range(max_retries):
+        try:
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=prompt,
+                config=request_config
+            )
+            parsed_response = response.parsed
+            print(f"    -> Model Conclusion: {parsed_response.final_answer} (Actual: {actual_answer})")
+            time.sleep(REQUESTS_DELAY_SECONDS)
+            return parsed_response
+
+        except (exceptions.ServiceUnavailable, exceptions.ResourceExhausted):
+            print(f"  Attempt {attempt + 1}/{max_retries}: API is unavailable or rate limit exceeded.")
+
+            if attempt == max_retries - 1:
+                print("    !! Max retries reached. Failing.")
+                raise
+
+            delay = (base_delay ** attempt) + random.uniform(0, 1)
+            print(f"    -> Retrying in {delay:.2f} seconds...")
+            time.sleep(delay)
+
+        except Exception as e:
+            print(f"    !! An unexpected error occurred (will not retry): {e}")
+            time.sleep(REQUESTS_DELAY_SECONDS)
+            return None
+
+    return None
 
 
 def run_evaluation(
