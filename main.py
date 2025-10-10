@@ -18,8 +18,8 @@ GEMINI_API_KEY_ENV_VAR = "GEMINI_API_KEY"
 DATASET_NAME = "yale-nlp/FOLIO"
 MODEL_NAME = "gemini-2.5-flash"
 DATA_SPLIT = "train"
-NUM_SAMPLES = 2
-REQUESTS_DELAY_SECONDS = 1
+NUM_SAMPLES = 20
+REQUESTS_DELAY_SECONDS = 0.5
 
 
 class LogicAnalysis(BaseModel):
@@ -28,7 +28,7 @@ class LogicAnalysis(BaseModel):
 
 
 def get_folio_dataset(token: str) -> Dataset:
-    return load_dataset(DATASET_NAME, split=DATA_SPLIT, token=token, trust_remote_code=True)
+    return load_dataset(DATASET_NAME, split=DATA_SPLIT, token=token)
 
 
 def evaluate_with_gemini_structured(
@@ -108,7 +108,7 @@ def plot_comparison(results: dict, total_samples: int, variable_name: str):
     plt.plot(x_values, nl_accuracy, marker='o', linestyle='-', label='Natural Language Accuracy')
     plt.plot(x_values, fol_accuracy, marker='s', linestyle='--', label='First-Order Logic Accuracy')
 
-    plt.ylim(0, 100)
+    plt.ylim(0, 110)
     plt.xlabel(variable_name)
     plt.ylabel('Accuracy (%)')
     plt.title(f'Model Reasoning Accuracy vs. {variable_name}\n(Model: {MODEL_NAME}, Samples: {total_samples})')
@@ -116,8 +116,14 @@ def plot_comparison(results: dict, total_samples: int, variable_name: str):
     plt.grid(True, which='both', linestyle='--', linewidth=0.5)
 
     for i, x_val in enumerate(x_values):
-        plt.text(x_val, nl_accuracy[i] + 2, f"{nl_accuracy[i]:.1f}%", ha='center')
-        plt.text(x_val, fol_accuracy[i] - 4, f"{fol_accuracy[i]:.1f}%", ha='center')
+        nl_val = nl_accuracy[i]
+        fol_val = fol_accuracy[i]
+
+        nl_vertical_alignment = 'top' if nl_val > 90 else 'bottom'
+        fol_vertical_alignment = 'top'
+
+        plt.text(x_val, nl_val, f" {nl_val:.1f}%", ha='center', va=nl_vertical_alignment)
+        plt.text(x_val, fol_val, f" {fol_val:.1f}%", ha='center', va=fol_vertical_alignment)
 
     plt.show()
 
@@ -153,7 +159,7 @@ def main():
 
     # --- EXPERIMENT 2: THINKING BUDGET COMPARISON ---
     print("\n--- EXPERIMENT 2: THINKING BUDGET COMPARISON ---")
-    budgets_to_test = [0, 200, 400, 800]
+    budgets_to_test = [int(8192/6), int(8192/4), int(8192/2), int(8192)]
     results_by_budget = {}
     for budget in budgets_to_test:
         print(f"\n>> Testing Thinking Budget: {budget}")
