@@ -1,22 +1,25 @@
 import os
+
+os.environ['GRPC_VERBOSITY'] = 'ERROR'  # Suppress gRPC warnings
+
 import time
 from typing import Literal
-import argparse
 
 from datasets import load_dataset, Dataset
-import google.generativeai as genai
+from google import genai
 from google.api_core import exceptions
-from google.generativeai import types
+from google.genai import types
 from matplotlib import pyplot as plt
 from pydantic import BaseModel
 
+# --- CONFIGURATION ---
 HF_TOKEN_ENV_VAR = "HF_TOKEN"
 GEMINI_API_KEY_ENV_VAR = "GEMINI_API_KEY"
 DATASET_NAME = "yale-nlp/FOLIO"
-MODEL_NAME = "gemini-2.5-pro"
+MODEL_NAME = "gemini-2.5-flash"
 DATA_SPLIT = "train"
-NUM_SAMPLES = 5
-REQUESTS_DELAY_SECONDS = 2
+NUM_SAMPLES = 2
+REQUESTS_DELAY_SECONDS = 1
 
 
 class LogicAnalysis(BaseModel):
@@ -25,19 +28,19 @@ class LogicAnalysis(BaseModel):
 
 
 def get_folio_dataset(token: str) -> Dataset:
-    return load_dataset(DATASET_NAME, split=DATA_SPLIT, token=token)
+    return load_dataset(DATASET_NAME, split=DATA_SPLIT, token=token, trust_remote_code=True)
 
 
 def evaluate_with_gemini_structured(
-        client: genai.GenerativeModel,
-        request_config: types.GenerationConfig,
+        client: genai.Client,
+        request_config: types.GenerateContentConfig,
         premises: str,
         conclusion: str,
         actual_answer: str
 ) -> LogicAnalysis | None:
     prompt = f"""
         Based ONLY on the following premises, analyze the conclusion.
-        Provide a brief reasoning and then state if the conclusion is logically True, False
+        Provide a brief reasoning and then state if the conclusion is logically True or False.
 
         Premises:
         {premises}
@@ -45,114 +48,126 @@ def evaluate_with_gemini_structured(
         Conclusion:
         "{conclusion}"
         """
-    print(f"Premise: {premises[:500]}...")
+    print(f"  Premise: {premises[:100]}...")
     try:
-        response = client.generate_content(
+        response = client.models.generate_content(
+            model=MODEL_NAME,
             contents=prompt,
-            generation_config=request_config
+            config=request_config
         )
-        parsed_response = LogicAnalysis.model_validate_json(response.text)
-        print(f"  -> Model Conclusion: {parsed_response.final_answer} (Actual: {actual_answer})")
+        # Use response.parsed with genai.Client
+        parsed_response = response.parsed
+        print(f"    -> Model Conclusion: {parsed_response.final_answer} (Actual: {actual_answer})")
         time.sleep(REQUESTS_DELAY_SECONDS)
         return parsed_response
     except exceptions.GoogleAPICallError as e:
-        print(f"  !! API Call Error: {e.message}")
+        print(f"    !! API Call Error: {e.message}")
         time.sleep(REQUESTS_DELAY_SECONDS)
         return None
     except Exception as e:
-        print(f"  !! An unexpected error occurred: {e}")
+        print(f"    !! An unexpected error occurred: {e}")
         time.sleep(REQUESTS_DELAY_SECONDS)
         return None
 
 
 def run_evaluation(
-        client: genai.GenerativeModel,
-        request_config: types.GenerationConfig,
+        client: genai.Client,
+        request_config: types.GenerateContentConfig,
         dataset_sample: Dataset,
-        evaluation_type: Literal["NL", "FOL"]
 ) -> dict:
-    correct_count = 0
-
-    premise_key = "premises" if evaluation_type == "NL" else "premises-FOL"
-    conclusion_key = "conclusion" if evaluation_type == "NL" else "conclusion-FOL"
-
-    print(f"\n--- Starting Evaluation for Type: {evaluation_type} ---")
+    nl_correct = 0
+    fol_correct = 0
 
     for i, example in enumerate(dataset_sample):
         print(f"  -> Evaluating example {i + 1}/{len(dataset_sample)}...")
         correct_label = str(example["label"]).capitalize()
 
-        analysis = evaluate_with_gemini_structured(
-            client,
-            request_config,
-            premises=example[premise_key],
-            conclusion=example[conclusion_key],
-            actual_answer=correct_label
+        # --- Natural Language Evaluation ---
+        nl_analysis = evaluate_with_gemini_structured(
+            client, request_config, example["premises"], example["conclusion"], correct_label
         )
-        if analysis:
-            if analysis.final_answer == correct_label:
-                correct_count += 1
+        if nl_analysis and nl_analysis.final_answer == correct_label:
+            nl_correct += 1
 
-    return {
-        "Correct": correct_count,
-    }
+        # --- First-Order Logic Evaluation ---
+        fol_analysis = evaluate_with_gemini_structured(
+            client, request_config, example["premises-FOL"], example["conclusion-FOL"], correct_label
+        )
+        if fol_analysis and fol_analysis.final_answer == correct_label:
+            fol_correct += 1
+
+    return {"NL Correct": nl_correct, "FOL Correct": fol_correct}
 
 
-def plot_results(evaluation_results: dict, total_samples: int, evaluation_type: str):
-    categories = ['Correct']
-    values = [evaluation_results[cat] for cat in categories]
+def plot_comparison(results: dict, total_samples: int, variable_name: str):
+    x_values = list(results.keys())
+    nl_accuracy = [(res["NL Correct"] / total_samples) * 100 for res in results.values()]
+    fol_accuracy = [(res["FOL Correct"] / total_samples) * 100 for res in results.values()]
 
-    plt.figure(figsize=(8, 6))
-    bars = plt.bar(categories, values, color=['green', 'gray'])
-    plt.ylim(0, total_samples)
-    plt.ylabel('Number of Samples')
-    plt.title(f"Evaluation Results for '{evaluation_type}' on FOLIO Dataset ({total_samples} samples)")
+    plt.figure(figsize=(10, 6))
 
-    for bar in bars:
-        yval = bar.get_height()
-        plt.text(bar.get_x() + bar.get_width() / 2, yval + 0.1, yval, ha='center', va='bottom')
+    plt.plot(x_values, nl_accuracy, marker='o', linestyle='-', label='Natural Language Accuracy')
+    plt.plot(x_values, fol_accuracy, marker='s', linestyle='--', label='First-Order Logic Accuracy')
+
+    plt.ylim(0, 100)
+    plt.xlabel(variable_name)
+    plt.ylabel('Accuracy (%)')
+    plt.title(f'Model Reasoning Accuracy vs. {variable_name}\n(Model: {MODEL_NAME}, Samples: {total_samples})')
+    plt.legend()
+    plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+
+    for i, x_val in enumerate(x_values):
+        plt.text(x_val, nl_accuracy[i] + 2, f"{nl_accuracy[i]:.1f}%", ha='center')
+        plt.text(x_val, fol_accuracy[i] - 4, f"{fol_accuracy[i]:.1f}%", ha='center')
 
     plt.show()
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Evaluate logical reasoning using the Gemini API on the FOLIO dataset.")
-    parser.add_argument(
-        "--type",
-        required=True,
-        choices=["NL", "FOL"],
-        help="The type of evaluation to run: 'NL' for natural language or 'FOL' for first-order logic."
-    )
-    args = parser.parse_args()
-    evaluation_type = args.type
-
     hf_token = os.getenv(HF_TOKEN_ENV_VAR)
     gemini_api_key = os.getenv(GEMINI_API_KEY_ENV_VAR)
     if not hf_token or not gemini_api_key:
-        raise ValueError(f"Environment variables {HF_TOKEN_ENV_VAR} and {GEMINI_API_KEY_ENV_VAR} must be set.")
+        raise ValueError(f"{HF_TOKEN_ENV_VAR} and {GEMINI_API_KEY_ENV_VAR} must be set.")
 
-    genai.configure(api_key=gemini_api_key)
+    print("Loading and filtering FOLIO dataset...")
+    loaded_folio_dataset = get_folio_dataset(token=hf_token)
+    folio_dataset = loaded_folio_dataset.filter(lambda example: example['label'] != 'Uncertain')
+    folio_sample = folio_dataset.select(range(NUM_SAMPLES))
+    print(f"Dataset ready. Running evaluations on {NUM_SAMPLES} samples.")
 
-    print("Loading FOLIO dataset...")
-    folio_dataset = get_folio_dataset(token=hf_token)
-    print(f"Dataset loaded. Running evaluation on {NUM_SAMPLES} samples.")
+    client = genai.Client(api_key=gemini_api_key)
 
-    if folio_dataset:
-        folio_sample = folio_dataset.select(range(NUM_SAMPLES))
-
-        request_config = types.GenerationConfig(
+    # --- EXPERIMENT 1: TEMPERATURE COMPARISON ---
+    print("\n--- EXPERIMENT 1: TEMPERATURE COMPARISON ---")
+    temperatures_to_test = [0.0, 0.3, 0.7, 1.0]
+    results_by_temp = {}
+    for temp in temperatures_to_test:
+        print(f"\n>> Testing Temperature: {temp}")
+        request_config = types.GenerateContentConfig(
             response_mime_type="application/json",
             response_schema=LogicAnalysis,
+            temperature=temp
         )
-        client = genai.GenerativeModel(MODEL_NAME)
+        results_by_temp[temp] = run_evaluation(client, request_config, folio_sample)
 
-        evaluation_results = run_evaluation(client, request_config, folio_sample, evaluation_type)
+    plot_comparison(results_by_temp, NUM_SAMPLES, "Temperature (Creativity)")
 
-        print("\n--- Evaluation Complete ---")
-        print(f"Results for '{evaluation_type}' evaluation:")
-        print(f"  Correct: {evaluation_results['Correct']}/{NUM_SAMPLES}")
+    # --- EXPERIMENT 2: THINKING BUDGET COMPARISON ---
+    print("\n--- EXPERIMENT 2: THINKING BUDGET COMPARISON ---")
+    budgets_to_test = [0, 200, 400, 800]
+    results_by_budget = {}
+    for budget in budgets_to_test:
+        print(f"\n>> Testing Thinking Budget: {budget}")
+        request_config = types.GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema=LogicAnalysis,
+            thinking_config=types.ThinkingConfig(thinking_budget=budget)
+        )
+        results_by_budget[budget] = run_evaluation(client, request_config, folio_sample)
 
-        plot_results(evaluation_results, NUM_SAMPLES, evaluation_type)
+    plot_comparison(results_by_budget, NUM_SAMPLES, "Thinking Budget")
+
+    print("\n--- All Experiments Complete ---")
 
 
 if __name__ == "__main__":
