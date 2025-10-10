@@ -155,6 +155,7 @@ def main():
         )
         results_by_temp[temp] = run_evaluation(client, request_config, folio_sample)
 
+    print(results_by_temp)
     plot_comparison(results_by_temp, NUM_SAMPLES, "Temperature (Creativity)")
 
     # --- EXPERIMENT 2: THINKING BUDGET COMPARISON ---
@@ -170,6 +171,7 @@ def main():
         )
         results_by_budget[budget] = run_evaluation(client, request_config, folio_sample)
 
+    print(results_by_budget)
     plot_comparison(results_by_budget, NUM_SAMPLES, "Thinking Budget")
 
     print("\n--- All Experiments Complete ---")
