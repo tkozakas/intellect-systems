@@ -31,14 +31,13 @@ def evaluate_with_gemini_structured(
     conclusion: str,
     actual_answer: str,
 ) -> LogicAnalysisUncertain | None:
-    prompt = f"""Based ONLY on the following premises, analyze the conclusion.
-Provide a brief reasoning and then state if the conclusion is logically True or False.
+    prompt = f"""Based ONLY on the following premises, analyze the conclusion. Provide a brief reasoning and then state if the conclusion is logically True, False, or Unknown.
 
 Premises:
 {premises}
 
 Conclusion:
-"{conclusion}"
+"{conclusion}
 """
     print(f"  Premise: {premises[:100]}...")
 

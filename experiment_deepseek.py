@@ -2,6 +2,7 @@ import json
 import os
 import random
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Literal
 
 import pandas as pd
@@ -27,7 +28,11 @@ def get_folio_dataset(token: str) -> Dataset:
 
 
 def evaluate_with_deepseek_structured(
-    client: OpenAI, premises: str, conclusion: str, actual_answer: str
+    client: OpenAI,
+    premises: str,
+    conclusion: str,
+    actual_answer: str,
+    example_index: int = 0,
 ) -> LogicAnalysisUncertain | None:
     system_prompt = """You are a logic reasoning expert. The user will provide premises and a conclusion. 
 Analyze whether the conclusion logically follows from the premises and output your response in JSON format.
@@ -50,6 +55,7 @@ Output format:
 """
 
     user_prompt = f"""Based ONLY on the following premises, analyze the conclusion.
+Provide a brief reasoning and then state if the conclusion is logically True, False or Uncertain.
 
 Premises:
 {premises}
@@ -58,7 +64,7 @@ Conclusion:
 "{conclusion}"
 """
 
-    print(f"  Premise: {premises[:100]}...")
+    print(f"  [Example {example_index}] Premise: {premises[:100]}...")
 
     for attempt in range(config.MAX_RETRIES):
         try:
@@ -84,54 +90,99 @@ Conclusion:
             )
 
             print(
-                f"    -> Model Conclusion: {parsed_response.final_answer} (Actual: {actual_answer})"
+                f"    [Example {example_index}] -> Model Conclusion: {parsed_response.final_answer} (Actual: {actual_answer})"
             )
             time.sleep(config.REQUESTS_DELAY_SECONDS)
             return parsed_response
 
         except Exception as e:
             print(
-                f"  Attempt {attempt + 1}/{config.MAX_RETRIES}: API unavailable or rate limit exceeded. Error: {e}"
+                f"  [Example {example_index}] Attempt {attempt + 1}/{config.MAX_RETRIES}: API unavailable or rate limit exceeded. Error: {e}"
             )
 
             if attempt == config.MAX_RETRIES - 1:
-                print("    !! Max retries reached.")
+                print(f"    [Example {example_index}] !! Max retries reached.")
                 raise
 
             delay = (config.REQUESTS_DELAY_SECONDS**attempt) + random.uniform(0, 1)
-            print(f"    -> Retrying in {delay:.2f} seconds...")
+            print(
+                f"    [Example {example_index}] -> Retrying in {delay:.2f} seconds..."
+            )
             time.sleep(delay)
 
     return None
 
 
+def process_single_example(client: OpenAI, example: dict, index: int) -> dict:
+    """Process a single example and return the result dictionary."""
+    correct_label = str(example["label"]).capitalize()
+
+    nl_analysis = evaluate_with_deepseek_structured(
+        client, example["premises"], example["conclusion"], correct_label, index + 1
+    )
+
+    return {
+        "story_id": example["story_id"],
+        "example_id": example["example_id"],
+        "premises_nl": example["premises"],
+        "conclusion_nl": example["conclusion"],
+        "premises_fol": example["premises-FOL"],
+        "conclusion_fol": example["conclusion-FOL"],
+        "correct_label": correct_label,
+        "nl_model_answer": nl_analysis.final_answer if nl_analysis else "ERROR",
+        "nl_model_reasoning": nl_analysis.reasoning if nl_analysis else "API_FAILURE",
+        "fol_model_answer": "N/A",
+        "fol_model_reasoning": "N/A (DeepSeek NL-only evaluation)",
+        "index": index, 
+    }
+
+
 def run_final_evaluation_and_log(client, dataset_sample) -> pd.DataFrame:
     results_log = []
-    for i, example in enumerate(dataset_sample):
-        print(f"  -> Final Eval: Example {i + 1}/{len(dataset_sample)}...")
-        correct_label = str(example["label"]).capitalize()
 
-        nl_analysis = evaluate_with_deepseek_structured(
-            client, example["premises"], example["conclusion"], correct_label
-        )
+    print(
+        f"Processing {len(dataset_sample)} examples with {config.MAX_WORKERS} parallel workers..."
+    )
 
-        results_log.append(
-            {
-                "story_id": example["story_id"],
-                "example_id": example["example_id"],
-                "premises_nl": example["premises"],
-                "conclusion_nl": example["conclusion"],
-                "premises_fol": example["premises-FOL"],
-                "conclusion_fol": example["conclusion-FOL"],
-                "correct_label": correct_label,
-                "nl_model_answer": nl_analysis.final_answer if nl_analysis else "ERROR",
-                "nl_model_reasoning": nl_analysis.reasoning
-                if nl_analysis
-                else "API_FAILURE",
-                "fol_model_answer": "N/A",
-                "fol_model_reasoning": "N/A (DeepSeek NL-only evaluation)",
-            }
-        )
+    with ThreadPoolExecutor(max_workers=config.MAX_WORKERS) as executor:
+        future_to_index = {
+            executor.submit(process_single_example, client, example, i): i
+            for i, example in enumerate(dataset_sample)
+        }
+
+        for future in as_completed(future_to_index):
+            index = future_to_index[future]
+            try:
+                result = future.result()
+                results_log.append(result)
+                print(
+                    f"  ✓ Completed {len(results_log)}/{len(dataset_sample)} examples"
+                )
+            except Exception as e:
+                print(f"  ✗ Example {index + 1} failed with error: {e}")
+                example = dataset_sample[index]
+                results_log.append(
+                    {
+                        "story_id": example["story_id"],
+                        "example_id": example["example_id"],
+                        "premises_nl": example["premises"],
+                        "conclusion_nl": example["conclusion"],
+                        "premises_fol": example["premises-FOL"],
+                        "conclusion_fol": example["conclusion-FOL"],
+                        "correct_label": str(example["label"]).capitalize(),
+                        "nl_model_answer": "ERROR",
+                        "nl_model_reasoning": f"EXCEPTION: {str(e)}",
+                        "fol_model_answer": "N/A",
+                        "fol_model_reasoning": "N/A (DeepSeek NL-only evaluation)",
+                        "index": index,
+                    }
+                )
+
+    results_log.sort(key=lambda x: x["index"])
+
+    for result in results_log:
+        result.pop("index", None)
+
     return pd.DataFrame(results_log)
 
 

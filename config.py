@@ -12,6 +12,7 @@ DATA_SPLIT = "train"
 NUM_SAMPLES_FINAL = 50
 MAX_RETRIES = 5
 REQUESTS_DELAY_SECONDS = 5
+MAX_WORKERS = 50 # Number of parallel workers for API calls
 
 OUTPUT_DIR = "outputs"
 
