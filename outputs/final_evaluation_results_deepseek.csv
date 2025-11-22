@@ -1,0 +1,583 @@
+story_id,example_id,premises_nl,conclusion_nl,premises_fol,conclusion_fol,correct_label,nl_model_answer,nl_model_reasoning,fol_model_answer,fol_model_reasoning
+406,1126,"All people who regularly drink coffee are dependent on caffeine.
+People regularly drink coffee, or they don't want to be addicted to caffeine, or both.
+No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+Rina is either a student who is unaware that caffeine is a drug, or she is not a student and is she aware that caffeine is a drug.
+Rina  is either a student who is dependent on caffeine, or she is not a student and not dependent on caffeine.",Rina doesn't want to be addicted to caffeine or is unaware that caffeine is a drug.,"∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+∀x (DrinkRegularly(x, coffee)  ∨ (¬WantToBeAddictedTo(x, caffeine)))
+∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+¬(Student(rina) ⊕  ¬AwareThatDrug(rina, caffeine))
+¬(IsDependentOn(rina, caffeine) ⊕ Student(rina))","¬WantToBeAddictedTo(rina, caffeine) ∨ (¬AwareThatDrug(rina, caffeine))",True,True,"Let's define the predicates for clarity: C(p) means p regularly drinks coffee, D(p) means p is dependent on caffeine, N(p) means p does not want to be addicted to caffeine, U(p) means p is unaware that caffeine is a drug, and S(p) means p is a student. The premises are: 1. ∀p [C(p) → D(p)]; 2. ∀p [C(p) ∨ N(p)]; 3. ∀p [N(p) → ¬U(p)]; 4. For Rina (r), either (S(r) ∧ U(r)) or (¬S(r) ∧ ¬U(r)); 5. For Rina, either (S(r) ∧ D(r)) or (¬S(r) ∧ ¬D(r)). The conclusion is N(r) ∨ U(r). From premise 4 and 5, we derive two cases for Rina: If S(r) is true, then U(r) is true (from premise 4) and D(r) is true (from premise 5). If S(r) is false, then U(r) is false (aware) and D(r) is false (from premises 4 and 5). In the case where S(r) is true, U(r) is true, so N(r) ∨ U(r) is true. In the case where S(r) is false, U(r) is false, and we use other premises: From premise 2, C(r) ∨ N(r). If C(r) were true, then from premise 1, D(r) would be true, but D(r) is false in this case, so C(r) must be false. Thus, from C(r) ∨ N(r) and C(r) false, N(r) must be true. Therefore, N(r) ∨ U(r) is true. Since N(r) ∨ U(r) is true in all cases, the conclusion logically follows.",N/A,N/A (DeepSeek NL-only evaluation)
+406,1127,"All people who regularly drink coffee are dependent on caffeine.
+People regularly drink coffee, or they don't want to be addicted to caffeine, or both.
+No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+Rina is either a student who is unaware that caffeine is a drug, or she is not a student and is she aware that caffeine is a drug.
+Rina  is either a student who is dependent on caffeine, or she is not a student and not dependent on caffeine.",Rina eith doesn't want to be addicted to caffeine or is unaware that caffeine is a drug.,"∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+∀x (DrinkRegularly(x, coffee)  ∨ (¬WantToBeAddictedTo(x, caffeine)))
+∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+¬(Student(rina) ⊕  ¬AwareThatDrug(rina, caffeine))
+¬(IsDependentOn(rina, caffeine) ⊕ Student(rina))","¬WantToBeAddictedTo(rina, caffeine) ⊕ ¬AwareThatDrug(rina, caffeine)",True,True,"From premise 4, Rina is either a student who is unaware that caffeine is a drug (S ∧ U) or not a student and aware (¬S ∧ ¬U), which implies that S if and only if U (S ↔ U). From premise 5, Rina is either a student who is dependent on caffeine (S ∧ D) or not a student and not dependent (¬S ∧ ¬D), which implies S if and only if D (S ↔ D). Therefore, U if and only if D (U ↔ D). From premise 2, for all people, including Rina, either they regularly drink coffee (C) or they do not want to be addicted to caffeine (N) (C ∨ N). If N is true for Rina, then the conclusion (N ∨ U) is true. If N is false, then C must be true (from premise 2). If C is true, then D is true (from premise 1). Since U ↔ D, U is true, so N ∨ U is true. Thus, in all cases, the conclusion holds.",N/A,N/A (DeepSeek NL-only evaluation)
+406,1128,"All people who regularly drink coffee are dependent on caffeine.
+People regularly drink coffee, or they don't want to be addicted to caffeine, or both.
+No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+Rina is either a student who is unaware that caffeine is a drug, or she is not a student and is she aware that caffeine is a drug.
+Rina  is either a student who is dependent on caffeine, or she is not a student and not dependent on caffeine.",Rina either regularly drinks coffee or is unaware that caffeine is a drug.,"∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+∀x (DrinkRegularly(x, coffee)  ∨ (¬WantToBeAddictedTo(x, caffeine)))
+∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+¬(Student(rina) ⊕  ¬AwareThatDrug(rina, caffeine))
+¬(IsDependentOn(rina, caffeine) ⊕ Student(rina))","DrinkRegularly(rina, coffee)  ⊕ IsUnawareThatCaffeineIsADrug(rina)",False,False,"The premises are analyzed as follows:
+- Premise 1: All people who regularly drink coffee are dependent on caffeine (C → D).
+- Premise 2: People regularly drink coffee, or they don't want to be addicted to caffeine, or both (C ∨ ¬W).
+- Premise 3: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug (¬W → A, equivalently ¬A → W).
+- Premise 4: Rina is either a student who is unaware that caffeine is a drug, or she is not a student and she is aware that caffeine is a drug. This is equivalent to S ↔ ¬A.
+- Premise 5: Rina is either a student who is dependent on caffeine, or she is not a student and not dependent on caffeine. This is equivalent to S ↔ D.
+From premises 4 and 5, S ↔ ¬A and S ↔ D, so D ↔ ¬A.
+The conclusion is that Rina either regularly drinks coffee or is unaware that caffeine is a drug (C ∨ ¬A).
+To check if this follows, assume the conclusion is false, meaning C is false and ¬A is false (so A is true).
+If C is false, from premise 2 (C ∨ ¬W), ¬W must be true.
+From premise 3 (¬W → A), since ¬W is true, A must be true, which matches our assumption.
+From D ↔ ¬A, since A is true, D is false.
+From S ↔ D, since D is false, S is false.
+From S ↔ ¬A, since S is false, ¬A must be false, so A is true, consistent.
+All premises are satisfied with C false and A true, making the conclusion false. Thus, the conclusion does not logically follow from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+406,1129,"All people who regularly drink coffee are dependent on caffeine.
+People regularly drink coffee, or they don't want to be addicted to caffeine, or both.
+No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+Rina is either a student who is unaware that caffeine is a drug, or she is not a student and is she aware that caffeine is a drug.
+Rina  is either a student who is dependent on caffeine, or she is not a student and not dependent on caffeine.","If Rina either doesn't want to be addicted to caffeine and is unaware that caffeine is a drug, or neither doesn't want to be addicted to caffeine nor is unaware that caffeine is a drug, then Rina doesn't want to be addicted to caffeine and regularly drinks coffee.","∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+∀x (DrinkRegularly(x, coffee)  ∨ (¬WantToBeAddictedTo(x, caffeine)))
+∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+¬(Student(rina) ⊕  ¬AwareThatDrug(rina, caffeine))
+¬(IsDependentOn(rina, caffeine) ⊕ Student(rina))","(DoNotWantToBeAddictedToCaffeine(rina) ⊕ ¬AwareThatDrug(rina, caffeine)) → ¬(¬WantToBeAddictedTo(rina, caffeine) ∧ DrinkRegularly(rina, coffee))",True,True,"The conclusion is a conditional statement: If (N ↔ U), then (N ∧ R), where N is 'Rina does not want to be addicted to caffeine', U is 'Rina is unaware that caffeine is a drug', and R is 'Rina regularly drinks coffee'. From the premises, premise 3 states N → ¬U, and premise 4 states S ↔ U (where S is 'Rina is a student'), and premise 5 states S ↔ DC (where DC is 'Rina is dependent on caffeine'). Premise 1 states R → DC, and premise 2 states R ∨ N. Assuming N ↔ U leads to a contradiction: if N and U are both true, premise 3 requires ¬U, contradiction; if both false, from premise 2, R must be true, so from premise 1, DC true, but from S ↔ U and S ↔ DC, U false implies S false and DC false, contradiction. Thus, N ↔ U is always false under the premises. Therefore, the implication (N ↔ U) → (N ∧ R) is vacuously true because the antecedent is false.",N/A,N/A (DeepSeek NL-only evaluation)
+8,21,"Miroslav Venhoda was a Czech choral conductor who specialized in the performance of Renaissance and Baroque music.
+Any choral conductor is a musician.
+Some musicians love music.
+Miroslav Venhoda published a book in 1946 called Method of Studying Gregorian Chant.",A Czech published a book in 1946.,"Czech(miroslav) ∧ ChoralConductor(miroslav) ∧ SpecializeInPerformanceOf(miroslav, renaissanceMusic) ∧ SpecializeInPerformanceOf(miroslav, baroqueMusic)
+∀x (ChoralConductor(x) → Musician(x))
+∃x ∃y ((Musician(x) → Love(x, music)) ∧ (¬(x=y) ∧ Musician(y) → Love(y, music)))
+PublishedBook(miroslav, methodOfStudyingGregorianChant, yr1946)","∃x ∃y (Czech(x) ∧ PublishedBook(x, y, year1946))",True,True,"Premise 1 states that Miroslav Venhoda is Czech. Premise 4 states that Miroslav Venhoda published a book in 1946. Combining these, it logically follows that at least one Czech person published a book in 1946, which directly matches the conclusion.",N/A,N/A (DeepSeek NL-only evaluation)
+8,22,"Miroslav Venhoda was a Czech choral conductor who specialized in the performance of Renaissance and Baroque music.
+Any choral conductor is a musician.
+Some musicians love music.
+Miroslav Venhoda published a book in 1946 called Method of Studying Gregorian Chant.",No choral conductor specialized in the performance of Renaissance.,"Czech(miroslav) ∧ ChoralConductor(miroslav) ∧ SpecializeInPerformanceOf(miroslav, renaissanceMusic) ∧ SpecializeInPerformanceOf(miroslav, baroqueMusic)
+∀x (ChoralConductor(x) → Musician(x))
+∃x ∃y ((Musician(x) → Love(x, music)) ∧ (¬(x=y) ∧ Musician(y) → Love(y, music)))
+PublishedBook(miroslav, methodOfStudyingGregorianChant, yr1946)","∀x (ChoralConductor(x) → ¬SpecializeInPerformanceOf(x, renaissanceMusic))",False,False,"From premise 1, Miroslav Venhoda is explicitly stated to be a choral conductor who specialized in Renaissance music. This establishes that there exists at least one choral conductor with this specialization. The conclusion claims that no choral conductor specialized in Renaissance music, which directly contradicts the information in premise 1. Therefore, the conclusion cannot be true based on the premises, and it does not logically follow.",N/A,N/A (DeepSeek NL-only evaluation)
+463,1337,"All eels are fish. 
+No fish are plants. 
+Everything displayed in the collection is either a plant or an animal.
+All multicellular animals are not bacteria.
+All animals displayed in the collection are multicellular.
+A sea eel is displayed in the collection.
+The sea eel is an eel or an animal or not a plant.",The sea eel is bacteria.,"∀x (Eel(x) → Fish(x))
+∀x (Fish(x) → ¬Plant(x))
+∀x (DisplayedIn(x, collection) → Plant(x) ⊕ Animal(x))
+∀x (Multicellular(x) → ¬Bacteria(x))
+∀x (DisplayedIn(x, collection) ∧ Animal(x) → Multicellular(x))
+DisplayedIn(seaEel, collection)
+Eel(seaEel) ∨ Animal(seaEel) ∨ ¬Plant(seaEel)",Bacteria(seaEel),False,False,"From the premises: Premise 6 states that a sea eel is displayed in the collection. Premise 3 states that everything in the collection is either a plant or an animal, so the sea eel must be a plant or an animal. Premise 7 states that the sea eel is an eel or an animal or not a plant. Analyzing the disjunction: If the sea eel is an eel (from premise 7), then from premise 1, all eels are fish, so it is a fish. From premise 2, no fish are plants, so it cannot be a plant. Since it must be plant or animal (from premise 3), it must be an animal. If the sea eel is an animal (from premise 7), then it is directly an animal. If the sea eel is not a plant (from premise 7), then from premise 3, it must be an animal. Thus, in all cases, the sea eel is an animal. From premise 5, all animals displayed in the collection are multicellular, so the sea eel is multicellular. From premise 4, all multicellular animals are not bacteria, so the sea eel is not bacteria. Therefore, the conclusion that the sea eel is bacteria is contradicted by the premises and does not logically follow.",N/A,N/A (DeepSeek NL-only evaluation)
+463,1338,"All eels are fish. 
+No fish are plants. 
+Everything displayed in the collection is either a plant or an animal.
+All multicellular animals are not bacteria.
+All animals displayed in the collection are multicellular.
+A sea eel is displayed in the collection.
+The sea eel is an eel or an animal or not a plant.",The sea eel is multicellular or is bacteria.,"∀x (Eel(x) → Fish(x))
+∀x (Fish(x) → ¬Plant(x))
+∀x (DisplayedIn(x, collection) → Plant(x) ⊕ Animal(x))
+∀x (Multicellular(x) → ¬Bacteria(x))
+∀x (DisplayedIn(x, collection) ∧ Animal(x) → Multicellular(x))
+DisplayedIn(seaEel, collection)
+Eel(seaEel) ∨ Animal(seaEel) ∨ ¬Plant(seaEel)",Multicellular(seaEel) ∨ Bacteria(seaEel),True,True,"From Premise 6, a sea eel is displayed in the collection. Premise 3 states that everything displayed is either a plant or an animal, so the sea eel must be a plant or an animal. Premise 7 states that the sea eel is an eel or an animal or not a plant. If the sea eel were a plant, it could not be an eel (from Premise 1 and 2, as all eels are fish and no fish are plants), it would not be an animal, and 'not a plant' would be false, making Premise 7 false and contradicting its given truth. Therefore, the sea eel cannot be a plant and must be an animal. Since the sea eel is an animal displayed in the collection (from Premise 6), and Premise 5 states that all animals displayed are multicellular, the sea eel is multicellular. The conclusion is that the sea eel is multicellular or is bacteria. Since the sea eel is multicellular, the disjunction is true, regardless of whether it is bacteria or not. Thus, the conclusion logically follows.",N/A,N/A (DeepSeek NL-only evaluation)
+133,392,"The Blake McFall Company Building is a building added to the National Register of Historic Places in 1990.
+The Emmet Building is a five-story building in Portland, Oregon.
+The Emmet Building was built in 1915.
+The Emmet Building is another name for the Blake McFall Company Building.
+John works at the Emmet Building.",A five-story building is built in 1915.,"Building(blakeMcFallCompanyBuilding) ∧ AddedToIn(blakeMcFallCompanyBuilding, theNationalRegisterOfHistoricPlaces, year1990)
+Building(emmetBuilding) ∧ Five-Story(emmetBuilding) ∧ LocatedIn(emmetBuilding, portland) ∧ LocatedIn(portland, oregon))
+BuiltIn(emmetBuilding, year1915)
+emmetBuiling=blakeMcFallCompanyBuilding
+WorkAt(john, emmetBuilding)","∃x (Building(x) ∧ Five-Story(x) ∧ ConstructedIn(x, year1915))",True,True,"Premise 2 states that the Emmet Building is a five-story building. Premise 3 states that the Emmet Building was built in 1915. Therefore, from these premises, we can infer that there exists at least one five-story building that was built in 1915. The conclusion 'A five-story building is built in 1915' is an existential statement that is supported by this inference. The other premises (about the National Register, the building's alternate name, and John's employment) are irrelevant to this specific conclusion and do not affect the logical validity.",N/A,N/A (DeepSeek NL-only evaluation)
+133,393,"The Blake McFall Company Building is a building added to the National Register of Historic Places in 1990.
+The Emmet Building is a five-story building in Portland, Oregon.
+The Emmet Building was built in 1915.
+The Emmet Building is another name for the Blake McFall Company Building.
+John works at the Emmet Building.","The Blake McFall Company Building is located in Portland, Oregon.","Building(blakeMcFallCompanyBuilding) ∧ AddedToIn(blakeMcFallCompanyBuilding, theNationalRegisterOfHistoricPlaces, year1990)
+Building(emmetBuilding) ∧ Five-Story(emmetBuilding) ∧ LocatedIn(emmetBuilding, portland) ∧ LocatedIn(portland, oregon))
+BuiltIn(emmetBuilding, year1915)
+emmetBuiling=blakeMcFallCompanyBuilding
+WorkAt(john, emmetBuilding)","LocatedIn(blakeMcFallCompanyBuilding, portland)",True,True,"Step 1: Premise 4 states that 'The Emmet Building is another name for the Blake McFall Company Building,' which means they refer to the same building. Step 2: Premise 2 states that 'The Emmet Building is a five-story building in Portland, Oregon,' establishing its location. Step 3: Since the buildings are identical, the location of the Emmet Building implies the location of the Blake McFall Company Building. Therefore, the conclusion logically follows from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+226,636,"William Dickinson was a British politician who sat in the House of Commons
+William Dickinson attended Westminster school for high school and then the University of Edinburgh.
+The University of Edinburgh is a university located in the United Kingdom.
+William Dickinson supported the Portland Whigs.
+People who supported the Portland Whigs did not get a seat in the Parliament.",William Dickinson did not get a seat in Parliament.,"British(williamDickinson) ∧ Politician(williamDickinson) ∧ SatIn(williamDickinson, houseOfCommons)
+Attended(williamDickinson, westminsterSchool) ∧ Highschool(westminsterSchool) ∧ Attended(williamDickinson, universityOfEdinburgh)
+University(universityOfEdinburgh) ∧ LocatedIn(universityOfEdinburgh, unitedKingdom)
+Supported(williamDickinson, portlandWhigs)
+∀x (Supported(x, portlandWhigs) → ¬SatIn(x, parliament))","SatIn(williamDickinson, parliament)",True,False,"Step 1: Premise 1 states that William Dickinson sat in the House of Commons, which implies he had a seat in Parliament. Step 2: Premise 4 states that William Dickinson supported the Portland Whigs. Step 3: Premise 5 states that people who supported the Portland Whigs did not get a seat in Parliament. Step 4: From premises 4 and 5, it logically follows that William Dickinson did not get a seat in Parliament. However, premise 1 directly contradicts this by indicating he did have a seat. Step 5: Since the premises are inconsistent (they cannot all be true simultaneously), the conclusion does not logically follow in a coherent manner from the entire set of premises.",N/A,N/A (DeepSeek NL-only evaluation)
+226,638,"William Dickinson was a British politician who sat in the House of Commons
+William Dickinson attended Westminster school for high school and then the University of Edinburgh.
+The University of Edinburgh is a university located in the United Kingdom.
+William Dickinson supported the Portland Whigs.
+People who supported the Portland Whigs did not get a seat in the Parliament.",William Dickinson attended university in the United Kingdom.,"British(williamDickinson) ∧ Politician(williamDickinson) ∧ SatIn(williamDickinson, houseOfCommons)
+Attended(williamDickinson, westminsterSchool) ∧ Highschool(westminsterSchool) ∧ Attended(williamDickinson, universityOfEdinburgh)
+University(universityOfEdinburgh) ∧ LocatedIn(universityOfEdinburgh, unitedKingdom)
+Supported(williamDickinson, portlandWhigs)
+∀x (Supported(x, portlandWhigs) → ¬SatIn(x, parliament))","∃x (Attended(williamDickinson, x) ∧ University(x) ∧ LocatedIn(x, unitedKingdom))",True,True,"Step-by-step analysis: Premise 2 states that William Dickinson attended the University of Edinburgh. Premise 3 states that the University of Edinburgh is located in the United Kingdom. Therefore, based solely on these premises, it logically follows that William Dickinson attended university in the United Kingdom. The other premises (1, 4, and 5) do not impact the logical derivation of this conclusion, as they are unrelated to the location of his university attendance.",N/A,N/A (DeepSeek NL-only evaluation)
+226,639,"William Dickinson was a British politician who sat in the House of Commons
+William Dickinson attended Westminster school for high school and then the University of Edinburgh.
+The University of Edinburgh is a university located in the United Kingdom.
+William Dickinson supported the Portland Whigs.
+People who supported the Portland Whigs did not get a seat in the Parliament.",William Dickinson sat in the House of Commons.,"British(williamDickinson) ∧ Politician(williamDickinson) ∧ SatIn(williamDickinson, houseOfCommons)
+Attended(williamDickinson, westminsterSchool) ∧ Highschool(westminsterSchool) ∧ Attended(williamDickinson, universityOfEdinburgh)
+University(universityOfEdinburgh) ∧ LocatedIn(universityOfEdinburgh, unitedKingdom)
+Supported(williamDickinson, portlandWhigs)
+∀x (Supported(x, portlandWhigs) → ¬SatIn(x, parliament))","SatIn(williamDickinson, houseOfCommons)",True,True,"The conclusion 'William Dickinson sat in the House of Commons' is directly stated in premise 1. Therefore, it logically follows from the premises without the need for additional inference. However, there is a potential inconsistency with premises 4 and 5: premise 4 states that William Dickinson supported the Portland Whigs, and premise 5 states that people who supported the Portland Whigs did not get a seat in Parliament, which would imply that William Dickinson did not sit in the House of Commons. Despite this inconsistency, the conclusion is explicitly affirmed in premise 1, so based solely on the premises provided, the conclusion follows logically.",N/A,N/A (DeepSeek NL-only evaluation)
+247,690,"LanguageA is a universal language
+If a universal language exists, then for every two people if they both know the same universal language they can communicate.
+Katya cannot communicate with Danil.
+Katya knows LanguageA. ",Danil knows LanguageA.,"UniversalLanguage(languageA)
+∀x ∀y (∃z (¬(x=y) ∧ Know(x, z) ∧ Know(y, z) ∧ UniversalLanguage(z)) → CanCommunicateWith(x, y) ∧ CanCommunicateWith(y, x))
+¬CanCommunicateWith(katya, danil)
+Know(katya, languageA)","Know(danil, languageA)",False,False,"Step-by-step analysis: Premise 1 states that LanguageA is a universal language. Premise 2 states that if a universal language exists, then for any two people, if they both know that language, they can communicate. Premise 3 states that Katya cannot communicate with Danil. Premise 4 states that Katya knows LanguageA. If Danil knew LanguageA, then both Katya and Danil would know the universal language, and by premise 2, they should be able to communicate. However, premise 3 contradicts this by stating they cannot communicate. Therefore, it must be that Danil does not know LanguageA, and the conclusion does not logically follow.",N/A,N/A (DeepSeek NL-only evaluation)
+422,1194,"All customers in James' family who subscribe to AMC A-List are eligible to watch three movies every week without any additional fees. 
+Some of the customers in James' family go to the cinema every week.
+Customers in James' family subscribe to AMC A-List or HBO service. 
+Customers in James' family who prefer TV series will not watch TV series in cinemas.
+All customers in James' family who subscribe to HBO services prefer TV series to movies. 
+Lily is in James' family; she watches TV series in cinemas. ",Lily goes to cinemas every week or watches 3 movies every week without any additional fees.,"∀x ((Customer(x) ∧ In(x, jameSFamily) ∧ SubscribedTo(x, aMCAList)) →  EligibleForThreeFreeMoviesEveryWeekWithoutAdditionalFees(x))
+∃x ∃y (Customer(x) ∧ In(x, jameSFamily) ∧ GoToEveryWeek(x, cinema) ∧ (¬(x=y)) ∧ Customer(y) ∧ In(y, jameSFamily) ∧ GoToEveryWeek(y, cinema))
+∀x (Customer(x) ∧ In(x, jameSFamily) ∧ (SubscribedTo(x, aMCAList) ∨ SubscribedTo(x, hBO)))
+∀x ((Customer(x) ∧ In(x, jameSFamily) ∧ Prefer(x, tVSeries)) → (¬WatchIn(x, tV, cinema)))
+∀x ((Customer(x) ∧ In(x, jameSFamily) ∧  SubscribedTo(x, hBO)) → Prefer(x, tVSeries))
+Customer(lily) ∧ In(lily, jameSFamily ∧ WatchIn(lily, tV, cinema)","GoToEveryWeek(lily, cinema) ∨ EligibleForThreeFreeMoviesWithoutAdditionalFees(lily)",True,False,"Step 1: From premise 6, Lily is in James' family and watches TV series in cinemas.
+Step 2: From premise 4, customers who prefer TV series will not watch TV series in cinemas. Since Lily watches TV series in cinemas, she does not prefer TV series.
+Step 3: From premise 5, all customers who subscribe to HBO services prefer TV series. Since Lily does not prefer TV series, she does not subscribe to HBO.
+Step 4: From premise 3, customers in James' family subscribe to AMC A-List or HBO service. Since Lily does not subscribe to HBO, she must subscribe to AMC A-List.
+Step 5: From premise 1, all customers who subscribe to AMC A-List are eligible to watch three movies every week without any additional fees. Therefore, Lily is eligible to watch three movies every week without additional fees.
+Step 6: The conclusion states that Lily goes to cinemas every week or watches 3 movies every week without any additional fees.
+- We do not have any premise indicating that Lily goes to cinemas every week. Premise 6 only states she watches TV series in cinemas, which implies she goes to cinemas but not necessarily every week.
+- We know Lily is eligible to watch 3 movies every week, but eligibility does not guarantee she actually watches them.
+Step 7: It is possible that Lily does not go to cinemas every week and does not watch 3 movies every week, even though she is eligible. Therefore, the conclusion does not logically follow from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+422,1195,"All customers in James' family who subscribe to AMC A-List are eligible to watch three movies every week without any additional fees. 
+Some of the customers in James' family go to the cinema every week.
+Customers in James' family subscribe to AMC A-List or HBO service. 
+Customers in James' family who prefer TV series will not watch TV series in cinemas.
+All customers in James' family who subscribe to HBO services prefer TV series to movies. 
+Lily is in James' family; she watches TV series in cinemas. ","If Lily does not both go to cinemas every week and subscribe to HBO service, then Lily is either available to watch 3 movies every week without any additional fees or she prefers TV more.","∀x ((Customer(x) ∧ In(x, jameSFamily) ∧ SubscribedTo(x, aMCAList)) →  EligibleForThreeFreeMoviesEveryWeekWithoutAdditionalFees(x))
+∃x ∃y (Customer(x) ∧ In(x, jameSFamily) ∧ GoToEveryWeek(x, cinema) ∧ (¬(x=y)) ∧ Customer(y) ∧ In(y, jameSFamily) ∧ GoToEveryWeek(y, cinema))
+∀x (Customer(x) ∧ In(x, jameSFamily) ∧ (SubscribedTo(x, aMCAList) ∨ SubscribedTo(x, hBO)))
+∀x ((Customer(x) ∧ In(x, jameSFamily) ∧ Prefer(x, tVSeries)) → (¬WatchIn(x, tV, cinema)))
+∀x ((Customer(x) ∧ In(x, jameSFamily) ∧  SubscribedTo(x, hBO)) → Prefer(x, tVSeries))
+Customer(lily) ∧ In(lily, jameSFamily ∧ WatchIn(lily, tV, cinema)","(GoToEveryWeek(lily, cinema) ∧ SubscribedTo(lily, hBO)) → (EligibleForThreeFreeMoviesEveryWeek(lily) ⊕ Prefer(lily, tVSeries))",True,True,"From the premises: Lily is in James' family and watches TV series in cinemas (premise 6). Premise 4 states that customers who prefer TV series will not watch TV series in cinemas, so since Lily watches TV series in cinemas, she cannot prefer TV series to movies (P is false). Premise 5 states that customers who subscribe to HBO services prefer TV series to movies, so since P is false for Lily, she cannot subscribe to HBO (H is false). Premise 3 states that customers in the family subscribe to AMC A-List or HBO service, so since H is false for Lily, she must subscribe to AMC A-List (A is true). Premise 1 states that subscribers to AMC A-List are eligible to watch three movies every week without additional fees, so since A is true for Lily, she is eligible (E is true). The conclusion is a conditional: if Lily does not both go to cinemas every week (G) and subscribe to HBO (H), then she is either eligible (E) or prefers TV more (P). Since H is false, the antecedent 'not (G and H)' is always true. Since E is true, the consequent 'E or P' is always true. Therefore, the conditional is true, and the conclusion logically follows from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+422,1196,"All customers in James' family who subscribe to AMC A-List are eligible to watch three movies every week without any additional fees. 
+Some of the customers in James' family go to the cinema every week.
+Customers in James' family subscribe to AMC A-List or HBO service. 
+Customers in James' family who prefer TV series will not watch TV series in cinemas.
+All customers in James' family who subscribe to HBO services prefer TV series to movies. 
+Lily is in James' family; she watches TV series in cinemas. ","If Lily is available to watch 3 movies every week without any additional fees and she watches TV series in cinemas, then she goes to cinemas every week and prefers TV series more.","∀x ((Customer(x) ∧ In(x, jameSFamily) ∧ SubscribedTo(x, aMCAList)) →  EligibleForThreeFreeMoviesEveryWeekWithoutAdditionalFees(x))
+∃x ∃y (Customer(x) ∧ In(x, jameSFamily) ∧ GoToEveryWeek(x, cinema) ∧ (¬(x=y)) ∧ Customer(y) ∧ In(y, jameSFamily) ∧ GoToEveryWeek(y, cinema))
+∀x (Customer(x) ∧ In(x, jameSFamily) ∧ (SubscribedTo(x, aMCAList) ∨ SubscribedTo(x, hBO)))
+∀x ((Customer(x) ∧ In(x, jameSFamily) ∧ Prefer(x, tVSeries)) → (¬WatchIn(x, tV, cinema)))
+∀x ((Customer(x) ∧ In(x, jameSFamily) ∧  SubscribedTo(x, hBO)) → Prefer(x, tVSeries))
+Customer(lily) ∧ In(lily, jameSFamily ∧ WatchIn(lily, tV, cinema)","(EligibleForThreeFreeMoviesEveryWeekWithoutAdditionalFees(lily) ∧ WatchIn(lily, tV, cinema)) → (GoToEveryWeek(lily, cinema) ∧ Prefer(lily, tVSeries))",False,False,"Step 1: From premise 6, Lily is in James' family and watches TV series in cinemas.
+Step 2: From premise 4, customers in James' family who prefer TV series will not watch TV series in cinemas. Since Lily watches TV series in cinemas, she does not prefer TV series.
+Step 3: From premise 5, all customers in James' family who subscribe to HBO services prefer TV series to movies. Since Lily does not prefer TV series, she does not subscribe to HBO services.
+Step 4: From premise 3, customers in James' family subscribe to AMC A-List or HBO service. Since Lily does not subscribe to HBO, she must subscribe to AMC A-List.
+Step 5: From premise 1, all customers in James' family who subscribe to AMC A-List are eligible to watch three movies every week without any additional fees. Thus, Lily is available to watch three movies every week without any additional fees.
+Step 6: The conclusion is a conditional statement: If Lily is available to watch 3 movies every week without additional fees and she watches TV series in cinemas, then she goes to cinemas every week and prefers TV series more.
+Step 7: From steps 1 and 5, the antecedent of the conditional (Lily is available to watch 3 movies without fees and she watches TV series in cinemas) is true based on the premises.
+Step 8: However, from step 2, Lily does not prefer TV series, so the part 'prefers TV series more' in the consequent is false.
+Step 9: Additionally, premise 2 states that some customers go to the cinema every week, but it does not specify that Lily does, so we cannot conclude she goes to cinemas every week.
+Step 10: Since the antecedent is true and the consequent is false (as 'prefers TV series more' is false and 'goes to cinemas every week' is not necessarily true), the conditional statement is false. Therefore, the conclusion does not logically follow from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+193,550,"A La Liga soccer team ranks higher than another La Liga soccer team if it receives more points.
+If there are two La Liga soccer teams and neither has more points than the other, then the team which receives more points from the games between the two teams ranks higher.
+Real Madrid and Barcelona are both La Liga soccer teams.
+Real Madrid received more points than Barcelona.
+Neither Real Madrid nor Barcelona received more points from the games between them.",Real Madrid ranks higher than Barcelona.,"∀x ∀y (LaLigaSoccerTeam(x) ∧ LaLigaSoccerTeam(y) ∧ MorePoints(x, y) → RankHigherThan(x, y))
+∀x ∀y (LaLigaSoccerTeam(x) ∧ LaLigaSoccerTeam(y) ∧ ¬MorePoints(x, y) ∧ ¬MorePoints(y, x) ∧ MorePointsInGameBetween(x, y) →  RankHigherThan(x, y))
+LaLigaSoccerTeam(realMadrid) ∧ LaLigaSoccerTeam(barcelona)
+MorePoints(realMadrid, barcelona)
+¬MorePointsInGameBetween(realMadrid, barcelona) ∧ ¬MorePointsInGameBetween(barcelona, realMadrid)","RankHigherThan(realMadrid, barcelona)",True,True,"Step 1: Identify the key premises. Premise 1 states that a La Liga team ranks higher than another if it has more points. Premise 2 provides a tie-breaker rule that applies only when neither team has more points (i.e., points are equal). Premise 3 confirms that Real Madrid and Barcelona are La Liga teams. Premise 4 states that Real Madrid has more points than Barcelona. Premise 5 indicates that neither team has more points from their head-to-head games, but this is irrelevant if points are not equal.
+Step 2: Analyze the logical flow. Since Premise 4 shows Real Madrid has more points than Barcelona, the condition for Premise 1 is satisfied directly. Premise 2 does not apply because the points are not equal (as per Premise 4), so the tie-breaker rule is not triggered. Premise 5 about head-to-head points does not override Premise 1 when points differ.
+Step 3: Conclude. Based solely on Premise 1 and Premise 4, Real Madrid must rank higher than Barcelona, making the conclusion logically valid.",N/A,N/A (DeepSeek NL-only evaluation)
+193,551,"A La Liga soccer team ranks higher than another La Liga soccer team if it receives more points.
+If there are two La Liga soccer teams and neither has more points than the other, then the team which receives more points from the games between the two teams ranks higher.
+Real Madrid and Barcelona are both La Liga soccer teams.
+Real Madrid received more points than Barcelona.
+Neither Real Madrid nor Barcelona received more points from the games between them.",Barcelona ranks higher than Real Madrid.,"∀x ∀y (LaLigaSoccerTeam(x) ∧ LaLigaSoccerTeam(y) ∧ MorePoints(x, y) → RankHigherThan(x, y))
+∀x ∀y (LaLigaSoccerTeam(x) ∧ LaLigaSoccerTeam(y) ∧ ¬MorePoints(x, y) ∧ ¬MorePoints(y, x) ∧ MorePointsInGameBetween(x, y) →  RankHigherThan(x, y))
+LaLigaSoccerTeam(realMadrid) ∧ LaLigaSoccerTeam(barcelona)
+MorePoints(realMadrid, barcelona)
+¬MorePointsInGameBetween(realMadrid, barcelona) ∧ ¬MorePointsInGameBetween(barcelona, realMadrid)","RankHigherThan(barcelona, realMadrid)",False,False,"From premise 4, Real Madrid received more points than Barcelona. Premise 1 states that a team ranks higher if it receives more points, so Real Madrid should rank higher than Barcelona. Premise 2 applies only when neither team has more points, which is not the case here due to premise 4. Therefore, the conclusion that Barcelona ranks higher contradicts the premises and does not logically follow.",N/A,N/A (DeepSeek NL-only evaluation)
+82,249,"Lawton Park is a neighborhood in Seattle. 
+All citizens of Lawton Park use the zip code 98199. 
+Tom is a citizen of Lawton Park.
+Daniel uses the zip code 98199. ",Tom uses the zip code 98199.,"NeighbourhoodIn(lawtonPark, seattle)
+∀x (Residentof(x, lawtonPark) → UseZipCode(x, num98199))
+ResidentOf(tom, lawtonPark)
+UseZipCode(daniel, num98199)","UseZipCode(tom, num98199)",True,True,"The conclusion 'Tom uses the zip code 98199' is directly supported by premises 2 and 3. Premise 2 states that all citizens of Lawton Park use zip code 98199, and premise 3 states that Tom is a citizen of Lawton Park. Therefore, by universal instantiation, Tom must use zip code 98199. Premises 1 and 4 are not relevant to this logical deduction, as they do not affect the relationship between Tom and the zip code.",N/A,N/A (DeepSeek NL-only evaluation)
+82,250,"Lawton Park is a neighborhood in Seattle. 
+All citizens of Lawton Park use the zip code 98199. 
+Tom is a citizen of Lawton Park.
+Daniel uses the zip code 98199. ",Tom doesn't use the zip code 98199.,"NeighbourhoodIn(lawtonPark, seattle)
+∀x (Residentof(x, lawtonPark) → UseZipCode(x, num98199))
+ResidentOf(tom, lawtonPark)
+UseZipCode(daniel, num98199)","¬UseZipCode(tom, num98199)",False,False,"From the premises: 'All citizens of Lawton Park use the zip code 98199' and 'Tom is a citizen of Lawton Park', it logically follows that Tom uses the zip code 98199. The conclusion 'Tom doesn't use the zip code 98199' directly contradicts this deduction. The other premises about Lawton Park being a neighborhood in Seattle and Daniel using the zip code 98199 do not alter the logical relationship regarding Tom. Therefore, the conclusion does not follow from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+86,261,"If a legislator is found guilty of stealing government funds, they will be suspended from office.
+Tiffany T. Alston was a legislator in Maryland's House of Delegates from 2011 to 2013.
+Tiffany T. Alston was found guilty of stealing government funds in 2012.",Tiffany T. Alston was suspended from the Maryland House of Delegates.,"∀x ((Legislator(x) ∧ StealsFunds(x)) → Suspended(x))
+Legislator(tiffanyTAlston)
+StealsFunds(tiffanyTAlston) ∧ StealsFundsInYr(tiffanyTAlston, yr2012)",Suspended(tiffanyTAlston),True,True,"1. Premise 1 states: 'If a legislator is found guilty of stealing government funds, they will be suspended from office.' This is a conditional statement where the antecedent is 'a legislator is found guilty of stealing government funds' and the consequent is 'they will be suspended from office.'
+2. Premise 2 states: 'Tiffany T. Alston was a legislator in Maryland's House of Delegates from 2011 to 2013.' This confirms that Tiffany T. Alston was a legislator during the specified period.
+3. Premise 3 states: 'Tiffany T. Alston was found guilty of stealing government funds in 2012.' This satisfies the antecedent of the conditional in premise 1, as she was a legislator at that time (2012 is within 2011-2013).
+4. By applying modus ponens to the conditional in premise 1 and the facts from premises 2 and 3, it logically follows that Tiffany T. Alston was suspended from office. The conclusion specifies 'suspended from the Maryland House of Delegates,' which aligns with the office mentioned in premise 2.
+5. There are no premises suggesting exceptions or contradictions, so the conclusion is logically derived.",N/A,N/A (DeepSeek NL-only evaluation)
+86,262,"If a legislator is found guilty of stealing government funds, they will be suspended from office.
+Tiffany T. Alston was a legislator in Maryland's House of Delegates from 2011 to 2013.
+Tiffany T. Alston was found guilty of stealing government funds in 2012.",Tiffany T. Alston was not suspended from the Maryland House of Delegates.,"∀x ((Legislator(x) ∧ StealsFunds(x)) → Suspended(x))
+Legislator(tiffanyTAlston)
+StealsFunds(tiffanyTAlston) ∧ StealsFundsInYr(tiffanyTAlston, yr2012)",¬Suspended(tiffanyTAlston),False,False,"Premise 1 states that if a legislator is found guilty of stealing government funds, they will be suspended from office. Premise 2 confirms that Tiffany T. Alston was a legislator in Maryland's House of Delegates from 2011 to 2013. Premise 3 states that she was found guilty of stealing government funds in 2012. Applying Modus Ponens to Premise 1 and Premise 3, it logically follows that she was suspended from office. The conclusion claims she was not suspended, which contradicts the logical inference from the premises. Therefore, the conclusion does not follow logically.",N/A,N/A (DeepSeek NL-only evaluation)
+171,492,"Some fish stings people.
+Stonefish is a fish.
+Stonefish stings when stepped on. 
+If a stonefish stings someone and they are not treated, it can cause death to them.
+To treat stonefish stings, apply heat to the affected area or use an antivenom.",Stings of some fish can cause death if not treated.,"∃x ∃y (Fish(x) → Sting(x,y))
+Fish(stonefish)
+∀x (SteppedOnBy(stonefish, x) → Sting(stonefish, x))
+∀x (Sting(stonefish, x) ∧ ¬Treated(x) → CauseDeathTo(stonefish, x))
+∀x (Sting(stonefish, x) ∧ (ApplyHeatTo(x) ∨ UseAntivenomOn(x)) → Treated(x))","∃x ∃y (Fish(x) ∧ Sting(x, y) ∧ ¬Treated(y) → CauseDeathTo(x, y))",True,True,"The conclusion 'Stings of some fish can cause death if not treated' is analyzed based on the premises. Premise 2 states that stonefish is a fish. Premise 3 indicates that stonefish stings when stepped on, which, in the context of the premises (particularly premise 4 referring to 'someone'), implies it can sting people. Premise 4 establishes that if a stonefish stings someone and they are not treated, it can cause death. Therefore, for stonefish (a specific fish), its sting can cause death if not treated. This satisfies the existential quantifier in the conclusion, as there exists at least one fish (stonefish) whose sting can cause death if not treated. The other premises (1 and 5) provide additional context but are not strictly necessary for this logical deduction. Thus, the conclusion follows logically from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+417,1174,"Some monitors made by LG have a type-c port.
+Monitors that have a type-c port were not made before 2010.
+All monitors in the library are made before 2010. 
+The L-2021 monitor is either used in the library or has a type-c port.
+The L-2021 monitor is either both produced before 2010 and made by LG, or neither is true.",The monitor L-2021 is either in the library or produced by LG.,"∃x (Monitor(x) ∧ ProducedBy(x, lG) ∧ Have(x, typeCPort) ∧ (¬(x=y)) ∧ Monitor(y) ∧ ProducedBy(y, lG) ∧ Have(y, typeCPort))
+∀x (Have(x, typeCPort) → ¬ProducedBefore(x, yr2010))
+∀x ((Monitor(x) ∧ In(x, library)) → ProducedBefore(x, yr2010))
+Monitor(l-2021) ∧ (In(l-2021, library) ⊕ Have(l-2021, typeCPort))
+¬(ProducedBefore(l-2021, yr2010) ⊕ ProducedBy(l-2021, lG))","In(l-2021, library) ⊕ ProducedBy(l-2021, lG)",False,False,"Let's analyze the premises step by step. Denote: L for 'made by LG', T for 'has a type-c port', B for 'made before 2010', I for 'in the library'. Premises: 1. Some LG monitors have T (existential, not universal). 2. T implies ¬B. 3. I implies B. 4. For L-2021, I or T. 5. For L-2021, (B and L) or (¬B and ¬L). Conclusion: For L-2021, I or L. From premise 5, two cases: Case 1: B and L both true. Then L is true, so I or L is true. Case 2: ¬B and ¬L both true. From premise 4, I or T. If I is false, then T must be true. From premise 2, T implies ¬B, which is consistent with ¬B. In this case, I is false and L is false, so I or L is false. This scenario is consistent with all premises, as premise 1 is existential and does not constrain L-2021, and other premises are satisfied. Therefore, the conclusion does not necessarily hold, as it can be false when L-2021 has T, not I, not B, and not L.",N/A,N/A (DeepSeek NL-only evaluation)
+417,1175,"Some monitors made by LG have a type-c port.
+Monitors that have a type-c port were not made before 2010.
+All monitors in the library are made before 2010. 
+The L-2021 monitor is either used in the library or has a type-c port.
+The L-2021 monitor is either both produced before 2010 and made by LG, or neither is true.",The L-2021 monitor either has a type-c port or is produced by LG.,"∃x (Monitor(x) ∧ ProducedBy(x, lG) ∧ Have(x, typeCPort) ∧ (¬(x=y)) ∧ Monitor(y) ∧ ProducedBy(y, lG) ∧ Have(y, typeCPort))
+∀x (Have(x, typeCPort) → ¬ProducedBefore(x, yr2010))
+∀x ((Monitor(x) ∧ In(x, library)) → ProducedBefore(x, yr2010))
+Monitor(l-2021) ∧ (In(l-2021, library) ⊕ Have(l-2021, typeCPort))
+¬(ProducedBefore(l-2021, yr2010) ⊕ ProducedBy(l-2021, lG))","Have(l-2021, typeCPort) ⊕ ProducedBy(l-2021, lG)",True,True,"Step-by-step analysis:
+1. Premise 4 states that the L-2021 monitor is either used in the library or has a type-c port (Lib OR T).
+2. Premise 3 states that all monitors in the library are made before 2010 (Lib → P).
+3. Premise 2 states that monitors with a type-c port were not made before 2010 (T → ¬P).
+4. Premise 5 states that for the L-2021 monitor, being produced before 2010 is equivalent to being made by LG (P ↔ L).
+5. Consider two cases based on premise 4:
+   - If the monitor is in the library (Lib true), then from premise 3, P is true, and from premise 5, L is true, so the conclusion (T OR L) is true because L is true.
+   - If the monitor is not in the library (Lib false), then from premise 4, T must be true, so the conclusion (T OR L) is true because T is true.
+6. In all possible scenarios, the conclusion holds, so it logically follows from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+417,1176,"Some monitors made by LG have a type-c port.
+Monitors that have a type-c port were not made before 2010.
+All monitors in the library are made before 2010. 
+The L-2021 monitor is either used in the library or has a type-c port.
+The L-2021 monitor is either both produced before 2010 and made by LG, or neither is true.","If the L-2021 monitor is either in the library and produced by LG, or neither in the library nor produced by LG,  then L-2021 neither has a type-c port nor is produced by LG.","∃x (Monitor(x) ∧ ProducedBy(x, lG) ∧ Have(x, typeCPort) ∧ (¬(x=y)) ∧ Monitor(y) ∧ ProducedBy(y, lG) ∧ Have(y, typeCPort))
+∀x (Have(x, typeCPort) → ¬ProducedBefore(x, yr2010))
+∀x ((Monitor(x) ∧ In(x, library)) → ProducedBefore(x, yr2010))
+Monitor(l-2021) ∧ (In(l-2021, library) ⊕ Have(l-2021, typeCPort))
+¬(ProducedBefore(l-2021, yr2010) ⊕ ProducedBy(l-2021, lG))","¬(In(l-2021, library) ⊕ ProducedBy(l-2021, lG)) → (¬Have(x, typeCPort) ∧ ¬ProducedBy(x, lG))",False,False,"Step 1: Define variables for clarity: L = L-2021 is in the library, P = L-2021 is produced by LG, T = L-2021 has a type-c port, B = L-2021 is produced before 2010.
+Step 2: From the premises:
+- Premise 4: L ∨ T (L-2021 is in the library or has a type-c port).
+- Premise 5: (B ∧ P) ∨ (¬B ∧ ¬P), which implies B ↔ P (B and P are equivalent).
+- Premise 3: L → B (if in the library, then produced before 2010).
+- Premise 2: T → ¬B (if has type-c port, then not produced before 2010).
+Step 3: Deduce logical relationships:
+- If L is true, then from L → B, B is true. From B ↔ P, P is true. From T → ¬B and B true, T must be false (otherwise contradiction). So, L true implies P true and T false.
+- If L is false, then from L ∨ T, T must be true. From T → ¬B, ¬B true, so B false. From B ↔ P, P false. So, L false implies P false and T true.
+Step 4: Therefore, L and P are always equivalent (L ↔ P is always true given the premises).
+Step 5: The conclusion is a conditional: if ( (L ∧ P) ∨ (¬L ∧ ¬P) ) then (¬T ∧ ¬P). Since ( (L ∧ P) ∨ (¬L ∧ ¬P) ) is equivalent to L ↔ P, and L ↔ P is always true, the antecedent is always true.
+Step 6: Check the consequent (¬T ∧ ¬P):
+- When L true (and P true), T false, so ¬T true but ¬P false, thus ¬T ∧ ¬P false.
+- When L false (and P false), T true, so ¬P true but ¬T false, thus ¬T ∧ ¬P false.
+- Therefore, ¬T ∧ ¬P is always false.
+Step 7: The implication 'if true then false' is false. Thus, the conclusion does not logically follow from the premises.
+Step 8: Premise 1 (some LG monitors have type-c port) is existential and does not affect the logic for L-2021, so it is not used in the deduction.",N/A,N/A (DeepSeek NL-only evaluation)
+417,1177,"Some monitors made by LG have a type-c port.
+Monitors that have a type-c port were not made before 2010.
+All monitors in the library are made before 2010. 
+The L-2021 monitor is either used in the library or has a type-c port.
+The L-2021 monitor is either both produced before 2010 and made by LG, or neither is true.","If the monitor L-2021 is either produced by LG and produced before 2010 or neither produced by LG nor produced before 2010,  then L-2021 is either in the library or produced by LG.","∃x (Monitor(x) ∧ ProducedBy(x, lG) ∧ Have(x, typeCPort) ∧ (¬(x=y)) ∧ Monitor(y) ∧ ProducedBy(y, lG) ∧ Have(y, typeCPort))
+∀x (Have(x, typeCPort) → ¬ProducedBefore(x, yr2010))
+∀x ((Monitor(x) ∧ In(x, library)) → ProducedBefore(x, yr2010))
+Monitor(l-2021) ∧ (In(l-2021, library) ⊕ Have(l-2021, typeCPort))
+¬(ProducedBefore(l-2021, yr2010) ⊕ ProducedBy(l-2021, lG))","¬(ProducedBefore(l-2021, year2010) ⊕ ProducedBy(l-2021, lG)) → (In(l-2021, library) ⊕ ProducedBy(l-2021, lG))",False,False,"The premises are analyzed as follows: Let L denote 'L-2021 is made by LG', B denote 'L-2021 is produced before 2010', T denote 'L-2021 has a type-c port', and I denote 'L-2021 is in the library'. From premise 5, (B and L) or (¬B and ¬L) is true for L-2021, which is equivalent to B ↔ L. The conclusion is a conditional: if ( (L and B) or (¬L and ¬B) ) then (I or L). Since (L and B) or (¬L and ¬B) is always true from premise 5, the conclusion reduces to checking if (I or L) must be true. However, from the premises: premise 4 states I or T, premise 2 states if T then ¬B, and premise 3 states if I then B. A counterexample exists where ¬I and ¬L: from B ↔ L, ¬L implies ¬B; from I or T and ¬I, T is true; from if T then ¬B, ¬B is true, which is consistent. Premise 1 does not constrain L-2021 directly. Thus, all premises can be true while I or L is false, making the conditional false. Therefore, the conclusion does not logically follow.",N/A,N/A (DeepSeek NL-only evaluation)
+377,1006,"Everything is either outside the solar system or in the solar system. 
+Nothing outside the solar system has the Sun as its star.
+Everything in the solar system is gravitationally bound by the Sun.
+No planets gravitationally bound by the Sun are rogue planets. 
+All orphan planets are rogue planets.
+If PSO J318.5−22 is not both a rogue planet and a planet gravitationally bound by the Sun, then it is a rogue planet.","PSO J318.5−22 is an orphan planet or it does not have the Sun as its star, or both.","∀x (Outside(x, solarSystem) ⊕ In(x, solarSystem))
+∀x (Outside(x, solarSystem) → ¬SunAs(x, star))
+∀x (In(x, solarSystem) → BoundBy(x, sun, gravitationally))
+∀x (Planet(x) ∧ BoundBy(x, sun, gravitationally) → ¬(Planet(x) ∧ Rogue(x)))
+∀x (Planet(x) ∧ Orphan(x) → Planet(x) ∧ Rogue(x))
+¬(Planet(pSOJ318.5-22) ∧ Rogue(pSOJ318.5-22) ∧ BoundBy(pSOJ318.5-22, sun, gravitationally)) → (Planet(pSOJ318.5-22) ∧ Rogue(pSOJ318.5-22))","(Planet(pSOJ318.5-22) ∧ Orphan(pSOJ318.5-22)) ∨ ¬SunAs(pSOJ318.5-22, star)",True,True,"From premise 6, 'If PSO J318.5−22 is not both a rogue planet and a planet gravitationally bound by the Sun, then it is a rogue planet,' it can be deduced that PSO J318.5−22 is a rogue planet. Assuming PSO J318.5−22 is a planet (as implied by the context of 'rogue planet' and 'planet gravitationally bound by the Sun' in the premises), if it were inside the solar system, premise 3 states it would be gravitationally bound by the Sun. However, premise 4 states that no planets gravitationally bound by the Sun are rogue planets, leading to a contradiction with it being a rogue planet. Therefore, PSO J318.5−22 cannot be inside the solar system and must be outside. From premise 1 and 2, if it is outside the solar system, it does not have the Sun as its star (¬H is true). Thus, the conclusion 'PSO J318.5−22 is an orphan planet or it does not have the Sun as its star, or both' (O ∨ ¬H) is true because ¬H is true, regardless of whether it is an orphan planet.",N/A,N/A (DeepSeek NL-only evaluation)
+377,1007,"Everything is either outside the solar system or in the solar system. 
+Nothing outside the solar system has the Sun as its star.
+Everything in the solar system is gravitationally bound by the Sun.
+No planets gravitationally bound by the Sun are rogue planets. 
+All orphan planets are rogue planets.
+If PSO J318.5−22 is not both a rogue planet and a planet gravitationally bound by the Sun, then it is a rogue planet.","If PSO J318.5−22 is an orphan planet or it does not have the Sun as the star, or both, then PSO J318.5−22 neither is an orphan planet nor does it have the Sun as the star.","∀x (Outside(x, solarSystem) ⊕ In(x, solarSystem))
+∀x (Outside(x, solarSystem) → ¬SunAs(x, star))
+∀x (In(x, solarSystem) → BoundBy(x, sun, gravitationally))
+∀x (Planet(x) ∧ BoundBy(x, sun, gravitationally) → ¬(Planet(x) ∧ Rogue(x)))
+∀x (Planet(x) ∧ Orphan(x) → Planet(x) ∧ Rogue(x))
+¬(Planet(pSOJ318.5-22) ∧ Rogue(pSOJ318.5-22) ∧ BoundBy(pSOJ318.5-22, sun, gravitationally)) → (Planet(pSOJ318.5-22) ∧ Rogue(pSOJ318.5-22))","(Planet(pSOJ318.5-22) ∧ Orphan(pSOJ318.5-22)) ∨ ¬SunAs(pSOJ318.5-22, star) → (¬(Planet(pSOJ318.5-22) ∧ Orphan(pSOJ318.5-22)) ∧ ¬SunAs(pSOJ318.5-22, star))",False,False,"From the premises, premise 6 implies that PSO J318.5−22 is a rogue planet (R true). Premises 1-3 establish that if PSO J318.5−22 is inside the solar system, it is gravitationally bound by the Sun (G true) and likely has the Sun as its star (S true), and if outside, it does not have the Sun as its star (not S true). The conclusion is a conditional: if (O or not S), then (not O and not S), where O is 'is an orphan planet'. This implication is not necessarily true because if O is true (e.g., if PSO J318.5−22 is an orphan planet and outside the solar system), then (O or not S) is true, but (not O and not S) is false, making the implication false. Since the premises allow O to be true (as R true and O true are consistent), the conclusion does not logically follow in all cases.",N/A,N/A (DeepSeek NL-only evaluation)
+180,518,"Sam is doing a project.
+A project is written either in C++ or Python.
+If Sam does a project written in Python, he will not use a Mac.
+Sam is using a Mac.
+If Sam uses a Mac, he will play a song.
+If a song is not titled ""Perfect,"" Sam will never play it.",The project Sam is doing is written in C++.,"∃x (Project(x) ∧ Do(sam, x))
+∀x (Project(x) → (WrittenIn(x, cplusplus) ⊕ WrittenIn(x, python)))
+∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+Use(sam, mac)
+∃x (Use(sam, mac) ∧ Song(x) → Play(sam, x))
+∀x (Song(x) ∧ Play(sam, x) → Titled(x, perfect))","∀x (Project(x) ∧ Do(sam, x) ∧ WrittenIn(x, cplusplus))",True,True,"Step 1: Premise 3 states that if Sam does a project written in Python, he will not use a Mac. Step 2: Premise 4 states that Sam is using a Mac. Step 3: Therefore, by modus tollens (if P then Q, not Q, therefore not P), Sam is not doing a project written in Python. Step 4: Premise 2 states that a project is written either in C++ or Python. Step 5: Since Sam is not doing a Python project, it must be written in C++. Step 6: The other premises (5 and 6) about playing a song do not affect this deduction and are consistent with the conclusion. Thus, the conclusion logically follows from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+477,1385,"All social media applications containing chat features are software. 
+All social media applications that allow users to send messages to each other have chat features. 
+All social media applications have chat features or video features. 
+All social media applications that have video features allow users to upload videos. 
+All software that is social media applications are computer programs. 
+All social media applications that have high engagement metrics are addictive. 
+If a social media application is addictive, then it is not ideal for preteens. 
+TikTok is a social media application, and it is not ideal for preteens. ",TikTok is a computer program.,"∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+∀x (SocialMedia(x) ∧ Application(x) ∧ AllowToSendTo(x, user, message) → Contain(x, chatFeature))
+∀x (SocialMedia(x) ∧ Application(x) → Contain(x, chatFeature) ∨ Contain(x, videoFeature))
+∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, videoFeature) → Allow(x, user, uploadVideo))
+∀x (SocialMedia(x) ∧ Application(x) ∧ Software(x) → ComputerProgram(x))
+∀x (SocialMedia(x) ∧ Application(x) ∧Have(x, highEngagementMetric) → Addictive(x))
+∀x (SocialMedia(x) ∧ Application(x) ∧ Addictive(x) → ¬IdealFor(x, preteen))
+SocialMedia(tikTok) ∧ Application(tikTok) ∧ ¬IdealFor(tikTok, preteen)",ComputerProgram(tikTok),True,False,"The conclusion 'TikTok is a computer program' does not logically follow from the premises. Here's the step-by-step analysis:
+- From premise 8, TikTok is a social media application.
+- From premise 3, all social media applications have chat features or video features, so TikTok has either chat features or video features.
+- If TikTok has chat features, then from premise 1, it is software, and from premise 5, it is a computer program.
+- However, if TikTok has video features but not chat features, there is no premise that states social media applications with video features are software. Premise 1 only applies to those with chat features, and no other premise connects video features to software.
+- Premises 6, 7, and 8 involve addictive properties and not being ideal for preteens, but they do not provide information about chat features, video features, or software status for TikTok.
+- Since it is possible for TikTok to have only video features and not be software (thus not a computer program) while all premises hold true, the conclusion is not guaranteed in all cases where the premises are true.
+- Therefore, the conclusion does not logically follow.",N/A,N/A (DeepSeek NL-only evaluation)
+477,1386,"All social media applications containing chat features are software. 
+All social media applications that allow users to send messages to each other have chat features. 
+All social media applications have chat features or video features. 
+All social media applications that have video features allow users to upload videos. 
+All software that is social media applications are computer programs. 
+All social media applications that have high engagement metrics are addictive. 
+If a social media application is addictive, then it is not ideal for preteens. 
+TikTok is a social media application, and it is not ideal for preteens. ",TikTok is either ideal for preteens or a computer program.,"∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+∀x (SocialMedia(x) ∧ Application(x) ∧ AllowToSendTo(x, user, message) → Contain(x, chatFeature))
+∀x (SocialMedia(x) ∧ Application(x) → Contain(x, chatFeature) ∨ Contain(x, videoFeature))
+∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, videoFeature) → Allow(x, user, uploadVideo))
+∀x (SocialMedia(x) ∧ Application(x) ∧ Software(x) → ComputerProgram(x))
+∀x (SocialMedia(x) ∧ Application(x) ∧Have(x, highEngagementMetric) → Addictive(x))
+∀x (SocialMedia(x) ∧ Application(x) ∧ Addictive(x) → ¬IdealFor(x, preteen))
+SocialMedia(tikTok) ∧ Application(tikTok) ∧ ¬IdealFor(tikTok, preteen)","IdealFor(tikTok, preteen) ⊕ ComputerProgram(tikTok)",True,False,"From premise 8, TikTok is a social media application and is not ideal for preteens. The conclusion is a disjunction: 'TikTok is either ideal for preteens or a computer program.' Since it is not ideal for preteens, for the disjunction to be true, TikTok must be a computer program. To determine if TikTok is a computer program, we examine the premises: Premise 5 states that all software that are social media applications are computer programs. Premise 1 states that all social media applications with chat features are software. Premise 3 states that all social media applications have chat features or video features. However, if TikTok has only video features and no chat features, there is no premise stating that it is software (as premise 1 only covers chat features). Therefore, it is possible that TikTok is not software and thus not a computer program. In this case, the disjunction would be false. Since the premises do not guarantee that TikTok is a computer program, the conclusion does not logically follow.",N/A,N/A (DeepSeek NL-only evaluation)
+477,1387,"All social media applications containing chat features are software. 
+All social media applications that allow users to send messages to each other have chat features. 
+All social media applications have chat features or video features. 
+All social media applications that have video features allow users to upload videos. 
+All software that is social media applications are computer programs. 
+All social media applications that have high engagement metrics are addictive. 
+If a social media application is addictive, then it is not ideal for preteens. 
+TikTok is a social media application, and it is not ideal for preteens. ",TikTok is does not have chat features or it is not a computer program.,"∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+∀x (SocialMedia(x) ∧ Application(x) ∧ AllowToSendTo(x, user, message) → Contain(x, chatFeature))
+∀x (SocialMedia(x) ∧ Application(x) → Contain(x, chatFeature) ∨ Contain(x, videoFeature))
+∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, videoFeature) → Allow(x, user, uploadVideo))
+∀x (SocialMedia(x) ∧ Application(x) ∧ Software(x) → ComputerProgram(x))
+∀x (SocialMedia(x) ∧ Application(x) ∧Have(x, highEngagementMetric) → Addictive(x))
+∀x (SocialMedia(x) ∧ Application(x) ∧ Addictive(x) → ¬IdealFor(x, preteen))
+SocialMedia(tikTok) ∧ Application(tikTok) ∧ ¬IdealFor(tikTok, preteen)","¬Contain(tikTok, chatFeature) ∨ ¬ComputerProgram(tikTok))",False,False,"The conclusion states that TikTok does not have chat features or it is not a computer program. From the premises, we know that TikTok is a social media application (from P8) and that all social media applications have either chat features or video features (from P3). Premises P1 and P5 imply that if a social media application has chat features, then it is software and thus a computer program (i.e., C → CP). Therefore, if TikTok has chat features, it must be a computer program, making the conclusion false in that case. Since it is possible for TikTok to have chat features (as per P3) while all premises hold true (e.g., assuming no other constraints force it to lack chat features), the conclusion does not necessarily follow. The other premises about addictive behavior and not being ideal for preteens (P6, P7, P8) do not provide information about chat features or computer program status, so they do not affect this analysis.",N/A,N/A (DeepSeek NL-only evaluation)
+477,1388,"All social media applications containing chat features are software. 
+All social media applications that allow users to send messages to each other have chat features. 
+All social media applications have chat features or video features. 
+All social media applications that have video features allow users to upload videos. 
+All software that is social media applications are computer programs. 
+All social media applications that have high engagement metrics are addictive. 
+If a social media application is addictive, then it is not ideal for preteens. 
+TikTok is a social media application, and it is not ideal for preteens. ",TikTok either has chat features or is a computer program.,"∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+∀x (SocialMedia(x) ∧ Application(x) ∧ AllowToSendTo(x, user, message) → Contain(x, chatFeature))
+∀x (SocialMedia(x) ∧ Application(x) → Contain(x, chatFeature) ∨ Contain(x, videoFeature))
+∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, videoFeature) → Allow(x, user, uploadVideo))
+∀x (SocialMedia(x) ∧ Application(x) ∧ Software(x) → ComputerProgram(x))
+∀x (SocialMedia(x) ∧ Application(x) ∧Have(x, highEngagementMetric) → Addictive(x))
+∀x (SocialMedia(x) ∧ Application(x) ∧ Addictive(x) → ¬IdealFor(x, preteen))
+SocialMedia(tikTok) ∧ Application(tikTok) ∧ ¬IdealFor(tikTok, preteen)","Contain(tikTok, chatFeature) ⊕ ComputerProgram(tikTok))",False,False,"Step 1: From premise 3, all social media applications have chat features or video features. Since TikTok is a social media application (premise 8), it must have chat features or video features.
+Step 2: If TikTok has chat features, then from premise 1, it is software, and from premise 5, it is a computer program. Thus, the conclusion 'TikTok either has chat features or is a computer program' would be true in this case.
+Step 3: However, if TikTok does not have chat features, it must have video features (from premise 3). There is no premise that states social media applications with video features are software or computer programs. Premise 1 only applies to those with chat features, and premise 5 only applies to software that are social media applications.
+Step 4: It is logically possible, based on the premises, for a social media application with only video features to not be software (as premise 1 does not cover this case), and thus not a computer program. In such a scenario, TikTok would have no chat features and not be a computer program, making the conclusion false.
+Step 5: The additional information that TikTok is not ideal for preteens (premise 8) does not force it to have chat features or be a computer program, as premise 7 (if addictive, then not ideal) does not imply the converse, and no other premises connect addictiveness or idealness to chat features or computer program status.
+Step 6: Since the premises do not guarantee that TikTok has chat features or is a computer program, the conclusion does not logically follow in all cases.",N/A,N/A (DeepSeek NL-only evaluation)
+104,316,"Ordinary is an unincorporated community.
+Located within Elliot County, Ordinary is on Kentucky Route 32.
+Ordinary is located northwest of Sandy Hook.",There are no unincorporated communities along Kentucky Route 32.,"UnincorporatedCommunity(ordinary)
+LocatedIn(ordinary, elliotCounty) ∧ On(ordinary, kentuckyRoute32)
+LocatedNorthwestOf(ordinary, sandyHook)","∀x (On(x, kentuckyRoute32) → ¬UnincorporatedCommunity(x))",False,False,"The premises state that Ordinary is an unincorporated community and is located on Kentucky Route 32. This directly establishes that there is at least one unincorporated community along Kentucky Route 32. The conclusion claims that there are no unincorporated communities along Kentucky Route 32, which contradicts the information provided in the premises. Therefore, the conclusion does not logically follow from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+104,317,"Ordinary is an unincorporated community.
+Located within Elliot County, Ordinary is on Kentucky Route 32.
+Ordinary is located northwest of Sandy Hook.",There is an unincorporated community located in Elliot County.,"UnincorporatedCommunity(ordinary)
+LocatedIn(ordinary, elliotCounty) ∧ On(ordinary, kentuckyRoute32)
+LocatedNorthwestOf(ordinary, sandyHook)","∃x (UnincorporatedCommunity(x) ∧ LocatedIn(x, elliotCounty))",True,True,"From the premises: 'Ordinary is an unincorporated community' and 'Located within Elliot County, Ordinary is on Kentucky Route 32', it is established that Ordinary is an unincorporated community and is located in Elliot County. The conclusion 'There is an unincorporated community located in Elliot County' directly follows because the existence of Ordinary satisfies this condition. The other premises about Kentucky Route 32 and the location northwest of Sandy Hook are irrelevant to this specific conclusion and do not affect the logical inference.",N/A,N/A (DeepSeek NL-only evaluation)
+348,922,"All young adults at the event like independence.
+All college students at the event are young adults.
+All Yale students at the event are college students.
+Everyone at the event is a Yale student or a Harvard student.
+All Harvard students at the event are diligent.
+Susan is at the event, and if Susan is a Harvard student, then she is a young adult.
+If Susan is a Yale student, then she does not like independence.",Susan likes independence and is diligent.,"∀x (At(x, event) ∧ YoungAdult(x) → Like(x, independence))
+∀x (At(x, event) ∧ CollegeStudent(x) → YoungAdult(x))
+∀x (At(x, event) ∧ YaleStudent(x) → CollegeStudent(x))
+∀x (At(x, event) → (YaleStudent(x) ⊕ HarvardStudent(x)))
+∀x (At(x, event) ∧ HarvardStudent(x) → Diligent(x))
+At(susan, event) ∧ (HarvardStudent(susan) → YoungAdult(susan))
+YaleStudent(susan) → ¬Like(susan, independence)","Like(susan, independence) ∧ Diligent(susan)",True,True,"Step 1: From premises 1, 2, and 3, if Susan is a Yale student, then she is a college student (premise 3), a young adult (premise 2), and thus likes independence (premise 1). However, premise 7 states that if Susan is a Yale student, she does not like independence, leading to a contradiction. Therefore, Susan cannot be a Yale student.
+Step 2: From premise 4, everyone at the event is either a Yale student or a Harvard student. Since Susan cannot be a Yale student, she must be a Harvard student.
+Step 3: From premise 6, if Susan is a Harvard student, then she is a young adult. Thus, Susan is a young adult.
+Step 4: From premise 1, all young adults at the event like independence, so Susan likes independence.
+Step 5: From premise 5, all Harvard students at the event are diligent, and since Susan is a Harvard student, she is diligent.
+Step 6: Therefore, Susan likes independence and is diligent, making the conclusion logically follow from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+348,923,"All young adults at the event like independence.
+All college students at the event are young adults.
+All Yale students at the event are college students.
+Everyone at the event is a Yale student or a Harvard student.
+All Harvard students at the event are diligent.
+Susan is at the event, and if Susan is a Harvard student, then she is a young adult.
+If Susan is a Yale student, then she does not like independence.",Susan is not both diligent and likes independence.,"∀x (At(x, event) ∧ YoungAdult(x) → Like(x, independence))
+∀x (At(x, event) ∧ CollegeStudent(x) → YoungAdult(x))
+∀x (At(x, event) ∧ YaleStudent(x) → CollegeStudent(x))
+∀x (At(x, event) → (YaleStudent(x) ⊕ HarvardStudent(x)))
+∀x (At(x, event) ∧ HarvardStudent(x) → Diligent(x))
+At(susan, event) ∧ (HarvardStudent(susan) → YoungAdult(susan))
+YaleStudent(susan) → ¬Like(susan, independence)","¬(Like(susan, independence) ∧ Diligent(susan))",False,False,"Susan is at the event, so from premise 4, she is either a Yale student or a Harvard student. Assuming Susan is a Yale student leads to a contradiction: from premise 3, she is a college student; from premise 2, she is a young adult; from premise 1, she likes independence; but premise 7 states that if she is a Yale student, she does not like independence. Thus, Susan cannot be a Yale student and must be a Harvard student. Since Susan is a Harvard student, from premise 6, she is a young adult; from premise 1, she likes independence; and from premise 5, she is diligent. Therefore, Susan is both diligent and likes independence, making the conclusion false as it claims she is not both.",N/A,N/A (DeepSeek NL-only evaluation)
+147,431,"Vic DiCara plays guitar and bass.
+The only style of music Vic DiCara plays is punk music.
+Vic DiCara played in the band Inside Out.",A musician from Inside Out plays bass.,"Play(vicDicara, guitar) ∧ Play(vicDicara, bass)
+∀x (Music(vicDicara, x) → ¬(x=punk)))
+Band(vicDicara, insideOut)","∃x (Band(x, insideOut) ∧ Play(x, bass))",True,True,"From premise 1, Vic DiCara plays bass, establishing that he is a musician who plays bass. From premise 3, Vic DiCara played in the band Inside Out, meaning he is a musician from Inside Out. Therefore, since Vic DiCara is a musician from Inside Out and plays bass, the conclusion that 'a musician from Inside Out plays bass' logically follows, as it asserts the existence of at least one such musician. Premise 2 about the style of music is not relevant to this inference.",N/A,N/A (DeepSeek NL-only evaluation)
+346,914,"All professional athletes spend most of their time on sports.
+All Olympic gold medal winners are professional athletes.
+No full-time scientists spend the majority of their time on sports.
+All Nobel physics laureates are full-time scientists.
+Amy spends the most time on sports, or Amy is an Olympic gold medal winner.
+If Amy is not a Nobel physics laureate, then Amy is not an Olympic gold medal winner.",Amy is neither a full-time scientist nor an Olympic gold medal winner.,"∀x (ProfessionalAthlete(x) → SpendOn(x, mostOfTheirTime, sports))
+∀x (OlympicGoldMedalWinner(x) → ProfessionalAthlete(x))
+∀x (FullTimeScientist(x) → ¬SpendOn(x, mostOfTheirTime, sports))
+∀x (NobelPhysicsLaureate(x) → FullTimeScientist(x))
+SpendOn(amy, mostOfTheirTime, sports) ∨ OlympicGoldMedalWinner(amy)
+¬NobelPhysicsLaureate(amy) → ¬OlympicGoldMedalWinner(amy)",¬(FullTimeScientist(amy) ∨ OlympicGoldMedalWinner(amy)),True,True,"From the premises: (1) All professional athletes spend most time on sports, so if Amy is an Olympic gold medal winner (O(A)), then from premise 2, she is a professional athlete, and thus spends most time on sports (S(A)). (2) From premise 6, if Amy is not a Nobel physics laureate, then she is not an Olympic gold medal winner, which by contrapositive means O(A) implies N(A). (3) From premise 4, N(A) implies F(A) (full-time scientist). (4) From premise 3, F(A) implies not S(A). Thus, O(A) implies N(A) implies F(A) implies not S(A). But from earlier, O(A) implies S(A), leading to a contradiction (S(A) and not S(A)). Therefore, O(A) must be false. From premise 5, S(A) or O(A), and since O(A) is false, S(A) must be true. From premise 3, F(A) implies not S(A), but S(A) is true, so F(A) must be false. Thus, Amy is not a full-time scientist and not an Olympic gold medal winner, which matches the conclusion.",N/A,N/A (DeepSeek NL-only evaluation)
+346,915,"All professional athletes spend most of their time on sports.
+All Olympic gold medal winners are professional athletes.
+No full-time scientists spend the majority of their time on sports.
+All Nobel physics laureates are full-time scientists.
+Amy spends the most time on sports, or Amy is an Olympic gold medal winner.
+If Amy is not a Nobel physics laureate, then Amy is not an Olympic gold medal winner.","If Amy is not an Olympic gold medal winner, then Amy is a Nobel physics laureate.","∀x (ProfessionalAthlete(x) → SpendOn(x, mostOfTheirTime, sports))
+∀x (OlympicGoldMedalWinner(x) → ProfessionalAthlete(x))
+∀x (FullTimeScientist(x) → ¬SpendOn(x, mostOfTheirTime, sports))
+∀x (NobelPhysicsLaureate(x) → FullTimeScientist(x))
+SpendOn(amy, mostOfTheirTime, sports) ∨ OlympicGoldMedalWinner(amy)
+¬NobelPhysicsLaureate(amy) → ¬OlympicGoldMedalWinner(amy)",¬OlympicGoldMedalWinner(amy) → NobelPhysicsLaureate(amy),False,False,"From premise 5, Amy either spends most time on sports or is an Olympic gold medal winner. From premise 6, if Amy is not a Nobel physics laureate, then she is not an Olympic gold medal winner, which is logically equivalent to if she is an Olympic gold medal winner, then she is a Nobel physics laureate. From premises 3 and 4, all Nobel physics laureates are full-time scientists, and no full-time scientists spend the majority of their time on sports, so if Amy is a Nobel physics laureate, she does not spend most time on sports. The contrapositive is: if Amy spends most time on sports, then she is not a Nobel physics laureate. Now, consider the conclusion: if Amy is not an Olympic gold medal winner, then she is a Nobel physics laureate. Assume Amy is not an Olympic gold medal winner. From premise 5, she must spend most time on sports. Then, from the contrapositive, she is not a Nobel physics laureate. Therefore, the assumption leads to Amy not being a Nobel physics laureate, contradicting the conclusion. Thus, the conclusion does not logically follow from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+409,1142,"All red fruits that grow in Ben's yard contain some Vitamin C.
+All apples that grow in Ben's yard are red fruits.
+All fruits that grow in Ben's yard and contain some Vitamin C are healthy. 
+No fruits that grow in Ben's yard and are healthy are on a warning list.
+The cherries grow in Ben's yard.
+If cherries are not apples and are not healthy, then they are red fruits.",The cherries are apples.,"∀x ((GrownIn(x, benSYard) ∧ RedFruit(x)) → Contain(x, vitaminC))
+∀x (GrownIn(x, benSYard) ∧ Is(x, apple) → RedFruit(x))
+∀x ((GrownIn(x, benSYard) ∧ Contain(x, vitaminC)) → healthy(x))
+∀x ((GrownIn(x, benSYard) ∧ Healthy(x)) → ¬On(x, warningList))
+GrownIn(cherry, benSYard)
+¬(Healthy(cherry) ∧ Is(cherry, apple)) → RedFruit(cherry)
+","Is(cherry, apple)",False,False,"From the premises, we can derive the following logical steps: Premises 1 and 3 imply that all red fruits in Ben's yard are healthy (since all red fruits contain Vitamin C, and all fruits with Vitamin C are healthy). Premise 2 states that all apples in Ben's yard are red fruits, so all apples are healthy. Premise 6 states that if cherries are not apples and not healthy, then they are red fruits. However, if cherries are red fruits, they must be healthy (from the earlier derivation), leading to a contradiction if cherries are not healthy. Thus, it cannot be that cherries are neither apples nor healthy, meaning cherries must be either apples or healthy (A ∨ H). The conclusion 'The cherries are apples' requires cherries to be apples, but since cherries could be healthy without being apples (as shown by a counterexample where cherries are healthy but not apples, satisfying all premises), the conclusion does not necessarily follow.",N/A,N/A (DeepSeek NL-only evaluation)
+409,1143,"All red fruits that grow in Ben's yard contain some Vitamin C.
+All apples that grow in Ben's yard are red fruits.
+All fruits that grow in Ben's yard and contain some Vitamin C are healthy. 
+No fruits that grow in Ben's yard and are healthy are on a warning list.
+The cherries grow in Ben's yard.
+If cherries are not apples and are not healthy, then they are red fruits.",The cherries either contain some amount of vitamin C or are on a warning list.,"∀x ((GrownIn(x, benSYard) ∧ RedFruit(x)) → Contain(x, vitaminC))
+∀x (GrownIn(x, benSYard) ∧ Is(x, apple) → RedFruit(x))
+∀x ((GrownIn(x, benSYard) ∧ Contain(x, vitaminC)) → healthy(x))
+∀x ((GrownIn(x, benSYard) ∧ Healthy(x)) → ¬On(x, warningList))
+GrownIn(cherry, benSYard)
+¬(Healthy(cherry) ∧ Is(cherry, apple)) → RedFruit(cherry)
+","Contain(cherry, vitaminC) ⊕ On(cherry, warningList)",True,False,"To determine if the conclusion 'The cherries either contain some amount of vitamin C or are on a warning list' logically follows from the premises, assume the negation of the conclusion: cherries do not contain vitamin C and are not on a warning list. From premise 1 (all red fruits contain vitamin C), if cherries do not contain vitamin C, then cherries are not red fruits. From premise 6 (if cherries are not apples and not healthy, then they are red fruits), and since cherries are not red fruits, the antecedent 'cherries are not apples and not healthy' must be false, meaning cherries are apples or healthy. If cherries are apples, from premise 2 (all apples are red fruits), they would be red fruits, contradicting that they are not red fruits. Thus, cherries must be healthy. With cherries healthy and not on a warning list, this is consistent with premise 4 (no healthy fruits are on a warning list). Premise 3 (all fruits with vitamin C are healthy) does not require healthy fruits to have vitamin C, so cherries can be healthy without vitamin C. All premises are satisfied under the assumption that cherries do not contain vitamin C and are not on a warning list, meaning the conclusion does not necessarily hold. Therefore, the conclusion does not logically follow from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+409,1144,"All red fruits that grow in Ben's yard contain some Vitamin C.
+All apples that grow in Ben's yard are red fruits.
+All fruits that grow in Ben's yard and contain some Vitamin C are healthy. 
+No fruits that grow in Ben's yard and are healthy are on a warning list.
+The cherries grow in Ben's yard.
+If cherries are not apples and are not healthy, then they are red fruits.",The cherries are either on a warning list or are red.,"∀x ((GrownIn(x, benSYard) ∧ RedFruit(x)) → Contain(x, vitaminC))
+∀x (GrownIn(x, benSYard) ∧ Is(x, apple) → RedFruit(x))
+∀x ((GrownIn(x, benSYard) ∧ Contain(x, vitaminC)) → healthy(x))
+∀x ((GrownIn(x, benSYard) ∧ Healthy(x)) → ¬On(x, warningList))
+GrownIn(cherry, benSYard)
+¬(Healthy(cherry) ∧ Is(cherry, apple)) → RedFruit(cherry)
+","On(cherry, warningList) ⊕ RedFruit(cherry)",True,False,"Step 1: From premise 6, if cherries are not apples and not healthy, then they are red. Step 2: Assume cherries are not red. Then, by contrapositive, it is not the case that they are not apples and not healthy, meaning they are either apples or healthy. Step 3: From premise 2, if cherries are apples, then they are red, but we assumed not red, so they cannot be apples. Therefore, they must be healthy. Step 4: From premise 4, if cherries are healthy, then they are not on the warning list. Step 5: Thus, if cherries are not red, they are not on the warning list, so the disjunction 'on warning list or red' is false. Step 6: Since no premise forces cherries to be red or on the warning list (e.g., cherries could be not red and healthy, making the disjunction false), the conclusion does not logically follow from the premises.",N/A,N/A (DeepSeek NL-only evaluation)
+409,1145,"All red fruits that grow in Ben's yard contain some Vitamin C.
+All apples that grow in Ben's yard are red fruits.
+All fruits that grow in Ben's yard and contain some Vitamin C are healthy. 
+No fruits that grow in Ben's yard and are healthy are on a warning list.
+The cherries grow in Ben's yard.
+If cherries are not apples and are not healthy, then they are red fruits.","If the cherries are either healthy or are on a warning list, then they are not red.","∀x ((GrownIn(x, benSYard) ∧ RedFruit(x)) → Contain(x, vitaminC))
+∀x (GrownIn(x, benSYard) ∧ Is(x, apple) → RedFruit(x))
+∀x ((GrownIn(x, benSYard) ∧ Contain(x, vitaminC)) → healthy(x))
+∀x ((GrownIn(x, benSYard) ∧ Healthy(x)) → ¬On(x, warningList))
+GrownIn(cherry, benSYard)
+¬(Healthy(cherry) ∧ Is(cherry, apple)) → RedFruit(cherry)
+","BeneficialTo(cherry, people) ⊕ On(cherry, warningList))) → ¬RedFruit(cherry)",False,False,"Step-by-step analysis: First, from the premises, it can be deduced that cherries must be healthy. Assuming cherries are not healthy leads to a contradiction: if cherries are not healthy, then whether they are apples or not, they would be red fruits (from premise 6 if not apples, or from premise 2 if apples), and being red implies they contain Vitamin C and are healthy (from premises 1 and 3), contradicting the assumption. Thus, cherries are healthy. From premise 4, since cherries are healthy and grow in the yard, they are not on the warning list. The conclusion states that if cherries are healthy or on the warning list, then they are not red. Since cherries are healthy, the antecedent is true. However, the consequent 'they are not red' may not hold, as cherries could be red fruits (e.g., if they are apples or other red fruits) and still be healthy, which is consistent with the premises. Therefore, the conclusion does not necessarily follow.",N/A,N/A (DeepSeek NL-only evaluation)
+409,1146,"All red fruits that grow in Ben's yard contain some Vitamin C.
+All apples that grow in Ben's yard are red fruits.
+All fruits that grow in Ben's yard and contain some Vitamin C are healthy. 
+No fruits that grow in Ben's yard and are healthy are on a warning list.
+The cherries grow in Ben's yard.
+If cherries are not apples and are not healthy, then they are red fruits.","If the cherries are either on a warning list or are red, then they are not healthy and do not contain any amount of vitamin C.","∀x ((GrownIn(x, benSYard) ∧ RedFruit(x)) → Contain(x, vitaminC))
+∀x (GrownIn(x, benSYard) ∧ Is(x, apple) → RedFruit(x))
+∀x ((GrownIn(x, benSYard) ∧ Contain(x, vitaminC)) → healthy(x))
+∀x ((GrownIn(x, benSYard) ∧ Healthy(x)) → ¬On(x, warningList))
+GrownIn(cherry, benSYard)
+¬(Healthy(cherry) ∧ Is(cherry, apple)) → RedFruit(cherry)
+","On(cherry, warningList) ⊕ RedFruit(cherry)) → ¬(BeneficialTo(cherry, people) ∧ Contain(cherry, vitaminC)",False,False,"The conclusion states: 'If the cherries are either on a warning list or are red, then they are not healthy and do not contain any amount of vitamin C.' Let's analyze this step by step using the premises:
+- Premise 1: All red fruits in Ben's yard contain some Vitamin C. So, if cherries are red (R), they contain Vitamin C (V).
+- Premise 3: All fruits in Ben's yard that contain Vitamin C are healthy. So, if cherries contain Vitamin C (V), they are healthy (H).
+- Therefore, if cherries are red (R), they must be healthy (H) and contain Vitamin C (V).
+- Now, consider the antecedent of the conclusion: cherries are on a warning list (W) or red (R).
+  - If cherries are on a warning list (W), from Premise 4 (no healthy fruits are on a warning list), cherries cannot be healthy (not H), and from the contrapositive of Premise 3, if not healthy, then not containing Vitamin C (not V). So, in this case, the consequent (not H and not V) holds.
+  - However, if cherries are red (R), as established, they must be healthy (H) and contain Vitamin C (V), so the consequent (not H and not V) is false.
+- Since the antecedent (W or R) can be true when cherries are red (R), but the consequent is false in that scenario, the implication does not hold in all cases consistent with the premises. Thus, the conclusion does not logically follow.",N/A,N/A (DeepSeek NL-only evaluation)
+425,1204,"Everyone working at Meta has a high income. 
+A person with a high income will not take a bus to their destination.
+People will either take a bus or drive to their destination. 
+Everyone who has a car will choose to drive to their destination. 
+No students drive to their destination. 
+James has a car or works at Meta.",James is a student.,"∀x (WorkAt(x, meta) → HighIncome(x))
+∀x (HighIncome(x) → ¬MeansToDestination(x, bus))
+∀x (MeansToDestination(x, bus) ⊕ MeansToDestination(x, drive))
+∀x (HaveCar(x) → MeansToDestination(x, drive))
+∀x (Student(x) → ¬ MeansToDestination(x, drive))
+HaveCar(james) ∨ WorkAt(james, meta)",Student(james),False,False,"From premise 6, James has a car or works at Meta. If James has a car, premise 4 implies he drives. Premise 5 states that no students drive, so if James drives, he cannot be a student. If James works at Meta, premise 1 implies he has a high income. Premise 2 states that a person with high income does not take a bus, and premise 3 says people either take a bus or drive, so James must drive. Again, premise 5 implies he cannot be a student. Thus, in both cases, James is not a student, contradicting the conclusion.",N/A,N/A (DeepSeek NL-only evaluation)
+425,1205,"Everyone working at Meta has a high income. 
+A person with a high income will not take a bus to their destination.
+People will either take a bus or drive to their destination. 
+Everyone who has a car will choose to drive to their destination. 
+No students drive to their destination. 
+James has a car or works at Meta.",James drives to his destination or he is a student.,"∀x (WorkAt(x, meta) → HighIncome(x))
+∀x (HighIncome(x) → ¬MeansToDestination(x, bus))
+∀x (MeansToDestination(x, bus) ⊕ MeansToDestination(x, drive))
+∀x (HaveCar(x) → MeansToDestination(x, drive))
+∀x (Student(x) → ¬ MeansToDestination(x, drive))
+HaveCar(james) ∨ WorkAt(james, meta)","MeansToDestination(x, drive) ∨ Student(james)",True,True,"From premise 6, James has a car or works at Meta. Consider the two cases: If James has a car, premise 4 states that he will drive. If James works at Meta, premise 1 implies he has a high income, premise 2 states that a person with high income will not take a bus, and premise 3 states that people either take a bus or drive, so James must drive. Thus, in both cases, James drives. Since James drives, the disjunction 'James drives or he is a student' is true, as at least one part (driving) is true.",N/A,N/A (DeepSeek NL-only evaluation)
+425,1206,"Everyone working at Meta has a high income. 
+A person with a high income will not take a bus to their destination.
+People will either take a bus or drive to their destination. 
+Everyone who has a car will choose to drive to their destination. 
+No students drive to their destination. 
+James has a car or works at Meta.",James either drives to their destination or is a student.,"∀x (WorkAt(x, meta) → HighIncome(x))
+∀x (HighIncome(x) → ¬MeansToDestination(x, bus))
+∀x (MeansToDestination(x, bus) ⊕ MeansToDestination(x, drive))
+∀x (HaveCar(x) → MeansToDestination(x, drive))
+∀x (Student(x) → ¬ MeansToDestination(x, drive))
+HaveCar(james) ∨ WorkAt(james, meta)","MeansToDestination(x, drive) ⊕ Student(james)",True,True,"From premise 6, James has a car or works at Meta. If James has a car, premise 4 states that he drives. If James works at Meta, premise 1 states he has a high income, premise 2 states that a person with high income does not take a bus, and premise 3 states that people either take a bus or drive, so he must drive. Therefore, in all cases, James drives. Since James drives, the disjunction 'James drives or is a student' is true because the first part is true, regardless of whether he is a student. Thus, the conclusion logically follows from the premises.",N/A,N/A (DeepSeek NL-only evaluation)

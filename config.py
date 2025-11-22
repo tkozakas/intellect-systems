@@ -18,6 +18,6 @@ OUTPUT_DIR = "outputs"
 GEMINI_MODEL_NAME = "gemini-2.5-pro"
 GEMINI_CSV_OUTPUT = os.path.join(OUTPUT_DIR, "final_evaluation_results_gemini.csv")
 
-DEEPSEEK_MODEL_NAME = "deepseek-chat"
+DEEPSEEK_MODEL_NAME = "deepseek-reasoner"
 DEEPSEEK_BASE_URL = "https://api.deepseek.com"
 DEEPSEEK_CSV_OUTPUT = os.path.join(OUTPUT_DIR, "final_evaluation_results_deepseek.csv")
