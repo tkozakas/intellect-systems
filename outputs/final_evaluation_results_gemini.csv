@@ -1,0 +1,118 @@
+story_id,example_id,premises_nl,conclusion_nl,premises_fol,conclusion_fol,correct_label,nl_model_answer,nl_model_reasoning,fol_model_answer,fol_model_reasoning
+406,1126,"All people who regularly drink coffee are dependent on caffeine.
+People regularly drink coffee, or they don't want to be addicted to caffeine, or both.
+No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+Rina is either a student who is unaware that caffeine is a drug, or she is not a student and is she aware that caffeine is a drug.
+Rina  is either a student who is dependent on caffeine, or she is not a student and not dependent on caffeine.",Rina doesn't want to be addicted to caffeine or is unaware that caffeine is a drug.,"∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+∀x (DrinkRegularly(x, coffee)  ∨ (¬WantToBeAddictedTo(x, caffeine)))
+∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+¬(Student(rina) ⊕  ¬AwareThatDrug(rina, caffeine))
+¬(IsDependentOn(rina, caffeine) ⊕ Student(rina))","¬WantToBeAddictedTo(rina, caffeine) ∨ (¬AwareThatDrug(rina, caffeine))",True,True,"Let's analyze the two parts of the conclusion, which is an 'OR' statement. We need to see if at least one part must be true based on the premises.
+
+Case 1: Assume Rina is unaware that caffeine is a drug.
+If this is true, then the second part of the conclusion (""is unaware that caffeine is a drug"") is true. This makes the entire 'OR' statement true.
+
+Case 2: Assume Rina is NOT unaware that caffeine is a drug (meaning she is aware).
+- According to Premise 4, if she is aware, she is not a student.
+- According to Premise 5, if she is not a student, she is not dependent on caffeine.
+- According to Premise 1, since she is not dependent on caffeine, she does not regularly drink coffee.
+- According to Premise 2, since she does not regularly drink coffee, it must be true that she doesn't want to be addicted to caffeine.
+- This makes the first part of the conclusion (""Rina doesn't want to be addicted to caffeine..."") true. This makes the entire 'OR' statement true.
+
+In both possible scenarios derived from the premises, the conclusion is true. Therefore, the conclusion is a logical consequence of the premises.",True,"Let's represent the predicates for Rina as follows:
+DR = DrinkRegularly(rina, coffee)
+ID = IsDependentOn(rina, caffeine)
+¬WTA = ¬WantToBeAddictedTo(rina, caffeine)
+¬AD = ¬AwareThatDrug(rina, caffeine)
+S = Student(rina)
+
+The premises for Rina are:
+1. DR → ID
+2. DR ∨ ¬WTA
+3. ¬WTA → ¬AD
+4. ¬(S ⊕ ¬AD)  which is equivalent to S ↔ ¬AD
+5. ¬(ID ⊕ S) which is equivalent to ID ↔ S
+
+The conclusion is: ¬WTA ∨ ¬AD
+
+From premises 4 and 5, by the transitivity of the biconditional (↔), we can deduce: ID ↔ ¬AD.
+
+Now, let's use proof by cases based on premise 2 (DR ∨ ¬WTA):
+
+Case 1: Assume ¬WTA is true.
+If ¬WTA is true, then by the rule of disjunction introduction, the conclusion (¬WTA ∨ ¬AD) is automatically true.
+
+Case 2: Assume DR is true.
+- From premise 1 (DR → ID), if DR is true, then ID must be true.
+- From our earlier deduction (ID ↔ ¬AD), if ID is true, then ¬AD must also be true.
+- If ¬AD is true, then by the rule of disjunction introduction, the conclusion (¬WTA ∨ ¬AD) is automatically true.
+
+Since the conclusion holds in both possible cases derived from premise 2, the conclusion is a logical consequence of the premises."
+406,1127,"All people who regularly drink coffee are dependent on caffeine.
+People regularly drink coffee, or they don't want to be addicted to caffeine, or both.
+No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+Rina is either a student who is unaware that caffeine is a drug, or she is not a student and is she aware that caffeine is a drug.
+Rina  is either a student who is dependent on caffeine, or she is not a student and not dependent on caffeine.",Rina eith doesn't want to be addicted to caffeine or is unaware that caffeine is a drug.,"∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+∀x (DrinkRegularly(x, coffee)  ∨ (¬WantToBeAddictedTo(x, caffeine)))
+∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+¬(Student(rina) ⊕  ¬AwareThatDrug(rina, caffeine))
+¬(IsDependentOn(rina, caffeine) ⊕ Student(rina))","¬WantToBeAddictedTo(rina, caffeine) ⊕ ¬AwareThatDrug(rina, caffeine)",True,True,"Let's analyze the premises step-by-step.
+1. Premise 4 says Rina is a student if and only if she is unaware that caffeine is a drug. 
+2. Premise 5 says Rina is a student if and only if she is dependent on caffeine.
+3. From (1) and (2), we can conclude that Rina is unaware that caffeine is a drug if and only if she is dependent on caffeine.
+
+Now, let's test the conclusion by assuming its opposite is true: ""Rina wants to be addicted to caffeine AND she is aware that caffeine is a drug.""
+
+4. If Rina is aware that caffeine is a drug (the second part of our assumption), then according to our deduction in (3), she must NOT be dependent on caffeine.
+5. According to Premise 1, if she is not dependent on caffeine, she does not regularly drink coffee.
+6. According to Premise 2, Rina either regularly drinks coffee OR she doesn't want to be addicted to caffeine.
+7. Since we deduced in (5) that she does not regularly drink coffee, she MUST not want to be addicted to caffeine for Premise 2 to be true.
+8. This creates a contradiction: our initial assumption stated that Rina *wants* to be addicted, but our logical deduction concludes she *doesn't want* to be addicted. 
+
+Because assuming the opposite of the conclusion leads to a contradiction, the original conclusion must be true.",False,"Let's denote the propositions for rina as follows:
+C = DrinkRegularly(rina, coffee)
+D = IsDependentOn(rina, caffeine)
+W = WantToBeAddictedTo(rina, caffeine)
+A = AwareThatDrug(rina, caffeine)
+S = Student(rina)
+
+The premises for rina are:
+1. C → D
+2. C ∨ ¬W
+3. ¬W → ¬A
+4. ¬(S ⊕ ¬A), which is equivalent to S ↔ ¬A
+5. ¬(D ⊕ S), which is equivalent to D ↔ S
+
+The conclusion to be evaluated is: ¬W ⊕ ¬A
+
+From premises (4) and (5), by transitivity of the biconditional (↔), we can deduce D ↔ ¬A.
+
+From the other premises, we can form a chain of implications:
+- From (3), by contraposition: A → W
+- From (2), which is equivalent to ¬C → ¬W, by contraposition: W → C
+- From (1): C → D
+Combining these, we get the chain: A → W → C → D, which simplifies to A → D.
+
+Now we have two derived facts: (i) A → D and (ii) D ↔ ¬A.
+Let's combine them. A → D is logically equivalent to ¬A ∨ D. Since D ↔ ¬A, we can substitute ¬A for D in the expression. This gives us ¬A ∨ ¬A, which simplifies to ¬A.
+Thus, the premises logically imply that ¬A must be true.
+
+Now we evaluate the conclusion: ¬W ⊕ ¬A.
+Since we have established ¬A is True, the conclusion becomes ¬W ⊕ True.
+The truth value of this expression depends on the truth value of ¬W:
+- If ¬W is True, then True ⊕ True is False.
+- If ¬W is False, then False ⊕ True is True.
+
+To determine if the conclusion is logically true, we must see if the premises force ¬W to be False. The premises constraining ¬W are (2) C ∨ ¬W and (3) ¬W → ¬A. Since we know ¬A is True, (3) becomes ¬W → True, which is always true and gives no information about ¬W. This leaves us with (2) C ∨ ¬W. The premises do not determine the truth values of C or ¬W, only that they cannot both be false. 
+
+We can construct a model where all premises are true but the conclusion is false. Let ¬W be True. To satisfy C ∨ ¬W, we can let C be False. We already know ¬A is True. 
+Let's check this model: ¬A=True, ¬W=True, C=False, D=True, S=True.
+- P1: C → D (F → T) is True.
+- P2: C ∨ ¬W (F ∨ T) is True.
+- P3: ¬W → ¬A (T → T) is True.
+- P4: S ↔ ¬A (T ↔ T) is True.
+- P5: D ↔ S (T ↔ T) is True.
+All premises are satisfied.
+However, the conclusion ¬W ⊕ ¬A becomes True ⊕ True, which is False.
+
+Since there is a valid assignment of truth values under which all premises are true and the conclusion is false, the conclusion is not a logical consequence of the premises. Therefore, the conclusion is not logically True."

@@ -4,3 +4,4 @@ protobuf
 datasets
 google-genai
 openai
+python-dotenv

@@ -21,39 +21,61 @@ class LogicAnalysisUncertain(BaseModel):
 
 def get_folio_dataset(token: str) -> Dataset:
     dataset = load_dataset(config.DATASET_NAME, split=config.DATA_SPLIT, token=token)
+    if not isinstance(dataset, Dataset):
+        raise ValueError(f"Expected Dataset but got {type(dataset)}")
     return dataset
 
 
 def evaluate_with_deepseek_structured(
     client: OpenAI, premises: str, conclusion: str, actual_answer: str
 ) -> LogicAnalysisUncertain | None:
-    prompt = f"""Based ONLY on the following premises, analyze the conclusion.
-Provide a brief reasoning and then state if the conclusion is logically True or False.
+    system_prompt = """You are a logic reasoning expert. The user will provide premises and a conclusion. 
+Analyze whether the conclusion logically follows from the premises and output your response in JSON format.
+
+EXAMPLE INPUT:
+Premises: All humans are mortal. Socrates is a human.
+Conclusion: Socrates is mortal.
+
+EXAMPLE JSON OUTPUT:
+{
+    "reasoning": "The conclusion follows logically from the premises through a valid syllogism.",
+    "final_answer": "True"
+}
+
+Output format:
+{
+    "reasoning": "<your step-by-step logical analysis>",
+    "final_answer": "True" or "False"
+}
+"""
+
+    user_prompt = f"""Based ONLY on the following premises, analyze the conclusion.
 
 Premises:
 {premises}
 
 Conclusion:
 "{conclusion}"
-
-Respond in JSON format with the following structure:
-{{
-    "reasoning": "<your reasoning>",
-    "final_answer": "True" or "False"
-}}
 """
+
     print(f"  Premise: {premises[:100]}...")
 
     for attempt in range(config.MAX_RETRIES):
         try:
             response = client.chat.completions.create(
                 model=config.DEEPSEEK_MODEL_NAME,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt},
+                ],
                 temperature=1,
-                max_tokens=16000,
+                max_tokens=8192,
+                response_format={"type": "json_object"},
             )
 
             response_text = response.choices[0].message.content
+            if not response_text:
+                raise ValueError("Empty response from API")
             response_json = json.loads(response_text)
 
             parsed_response = LogicAnalysisUncertain(
