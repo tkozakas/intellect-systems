@@ -15,15 +15,31 @@ def main():
         default="gemini",
         help="Which experiment to run. Default is 'gemini'.",
     )
+    parser.add_argument(
+        "--example-id",
+        type=str,
+        default=None,
+        help="Specific example_id from FOLIO dataset to run (e.g., 'test-1234'). If not provided, runs all samples.",
+    )
 
     args = parser.parse_args()
 
     if args.experiment == "gemini":
-        print("Running Gemini experiment (NL + FOL)...")
-        experiment_gemini.run_experiment()
+        if args.example_id:
+            print(
+                f"Running Gemini experiment (NL + FOL) for example_id: {args.example_id}..."
+            )
+        else:
+            print("Running Gemini experiment (NL + FOL)...")
+        experiment_gemini.run_experiment(example_id=args.example_id)
     elif args.experiment == "deepseek":
-        print("Running DeepSeek experiment (NL only)...")
-        experiment_deepseek.run_experiment()
+        if args.example_id:
+            print(
+                f"Running DeepSeek experiment (NL only) for example_id: {args.example_id}..."
+            )
+        else:
+            print("Running DeepSeek experiment (NL only)...")
+        experiment_deepseek.run_experiment(example_id=args.example_id)
     else:
         print(f"Unknown experiment: {args.experiment}")
         sys.exit(1)

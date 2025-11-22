@@ -116,7 +116,7 @@ def run_final_evaluation_and_log(
     return pd.DataFrame(results_log)
 
 
-def run_experiment():
+def run_experiment(example_id: str | None = None):
     hf_token = os.getenv(config.HF_TOKEN_ENV_VAR)
     gemini_api_key = os.getenv(config.GEMINI_API_KEY_ENV_VAR)
     if not hf_token or not gemini_api_key:
@@ -126,16 +126,30 @@ def run_experiment():
 
     os.makedirs(config.OUTPUT_DIR, exist_ok=True)
 
-    print("Loading and filtering FOLIO dataset...")
+    print("Loading FOLIO dataset...")
     loaded_folio_dataset = get_folio_dataset(token=hf_token)
-    folio_dataset = loaded_folio_dataset.filter(
-        lambda example: example["label"] != "Uncertain"
-    )
-    folio_sample_final = folio_dataset.select(range(config.NUM_SAMPLES_FINAL))
+
+    if example_id:
+        # Search entire dataset for specific example_id
+        folio_sample_final = loaded_folio_dataset.filter(
+            lambda example: str(example["example_id"]) == str(example_id)
+        )
+        if len(folio_sample_final) == 0:
+            raise ValueError(f"No example found with example_id: {example_id}")
+        print(
+            f"Found example with ID: {example_id} (label: {folio_sample_final[0]['label']})"
+        )
+    else:
+        # Filter out Uncertain labels only when running all samples
+        folio_dataset = loaded_folio_dataset.filter(
+            lambda example: example["label"] != "Uncertain"
+        )
+        folio_sample_final = folio_dataset.select(range(config.NUM_SAMPLES_FINAL))
 
     client = genai.Client(api_key=gemini_api_key)
 
-    print(f"\n--- GEMINI FINAL EVALUATION ON {config.NUM_SAMPLES_FINAL} SAMPLES ---")
+    sample_count = len(folio_sample_final)
+    print(f"\n--- GEMINI FINAL EVALUATION ON {sample_count} SAMPLE(S) ---")
     final_request_config = types.GenerateContentConfig(
         response_mime_type="application/json", response_schema=LogicAnalysisUncertain
     )
@@ -143,6 +157,17 @@ def run_experiment():
     results_df = run_final_evaluation_and_log(
         client, final_request_config, folio_sample_final
     )
-    results_df.to_csv(config.GEMINI_CSV_OUTPUT, index=False)
-    print(f"\nFinal evaluation results saved to {config.GEMINI_CSV_OUTPUT}")
+
+    if example_id:
+        # Output to stdout in CSV format for single example
+        print("\n" + "=" * 80)
+        print("EVALUATION RESULTS (CSV FORMAT)")
+        print("=" * 80)
+        print(results_df.to_csv(index=False))
+        print("=" * 80)
+    else:
+        # Save to file for batch processing
+        results_df.to_csv(config.GEMINI_CSV_OUTPUT, index=False)
+        print(f"\nFinal evaluation results saved to {config.GEMINI_CSV_OUTPUT}")
+
     print("\n--- Gemini Experiment Complete ---")
