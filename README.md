@@ -1,18 +1,16 @@
-# Intellect systems
+# Intellect Systems - Logic Reasoning Experiments
 
-Use .env.template to create a .env file with your configuration
-tokens: [hugging-face](https://huggingface.co/settings/tokens), [gemini](https://aistudio.google.com/api-keys)
+Evaluate logic reasoning capabilities of LLMs on the FOLIO dataset using Natural Language and First-Order Logic.
 
-### Install dependencies
-
+## Quick Start
+1. Set env variables `HF_TOKEN`, `GEMINI_API_KEY`, `DEEPSEEK_API_KEY`
+2. Do the thing
 ```bash
-python -m venv venv
-source venv/bin/activate
 pip install -r requirements.txt
-```
 
-### Run the thing
+# Run Gemini experiment (NL + FOL)
+python main.py --experiment gemini
 
-```bash
-python main.py
+# Run DeepSeek experiment (NL only)
+python main.py --experiment deepseek
 ```

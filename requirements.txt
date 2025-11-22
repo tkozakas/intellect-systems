@@ -1,5 +1,6 @@
 pydantic
-matplotlib
 pandas
 protobuf
 datasets
+google-genai
+openai
