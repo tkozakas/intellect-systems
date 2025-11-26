@@ -34,23 +34,12 @@ def evaluate_with_deepseek_structured(
     actual_answer: str,
     example_index: int = 0,
 ) -> LogicAnalysisUncertain | None:
-    system_prompt = """You are a logic reasoning expert. The user will provide premises and a conclusion. 
+    system_prompt = """The user will provide premises and a conclusion. 
 Analyze whether the conclusion logically follows from the premises and output your response in JSON format.
-
-EXAMPLE INPUT:
-Premises: All humans are mortal. Socrates is a human.
-Conclusion: Socrates is mortal.
-
 EXAMPLE JSON OUTPUT:
 {
     "reasoning": "The conclusion follows logically from the premises through a valid syllogism.",
     "final_answer": "True"
-}
-
-Output format:
-{
-    "reasoning": "<your step-by-step logical analysis>",
-    "final_answer": "True" or "False"
 }
 """
 
