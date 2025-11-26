@@ -159,15 +159,19 @@ def run_experiment(example_id: str | None = None):
     )
 
     if example_id:
-        # Output to stdout in CSV format for single example
-        print("\n" + "=" * 80)
-        print("EVALUATION RESULTS (CSV FORMAT)")
-        print("=" * 80)
-        print(results_df.to_csv(index=False))
-        print("=" * 80)
+        # Output only model answers and reasoning
+        for _, row in results_df.iterrows():
+            print(f"\nNL Answer: {row['nl_model_answer']}")
+            print(f"NL Reasoning:\n{row['nl_model_reasoning']}")
+            print(f"\nFOL Answer: {row['fol_model_answer']}")
+            print(f"FOL Reasoning:\n{row['fol_model_reasoning']}\n")
     else:
-        # Save to file for batch processing
         results_df.to_csv(config.GEMINI_CSV_OUTPUT, index=False)
         print(f"\nFinal evaluation results saved to {config.GEMINI_CSV_OUTPUT}")
 
-    print("\n--- Gemini Experiment Complete ---")
+        nl_correct = (results_df['correct_label'] == results_df['nl_model_answer']).sum()
+        fol_correct = (results_df['correct_label'] == results_df['fol_model_answer']).sum()
+        nl_accuracy = (nl_correct / len(results_df)) * 100
+        fol_accuracy = (fol_correct / len(results_df)) * 100
+        print(f"\nNL ACCURACY:  {nl_correct}/{len(results_df)} ({nl_accuracy:.2f}%)")
+        print(f"FOL ACCURACY: {fol_correct}/{len(results_df)} ({fol_accuracy:.2f}%)")

@@ -223,15 +223,25 @@ def run_experiment(example_id: str | None = None):
     results_df = run_final_evaluation_and_log(client, folio_sample_final)
 
     if example_id:
-        # Output to stdout in CSV format for single example
-        print("\n" + "=" * 80)
-        print("EVALUATION RESULTS (CSV FORMAT)")
-        print("=" * 80)
-        print(results_df.to_csv(index=False))
-        print("=" * 80)
+        # Output only model answer and reasoning
+        for _, row in results_df.iterrows():
+            print(f"\nModel Answer: {row['nl_model_answer']}")
+            print(f"\nModel Reasoning:\n{row['nl_model_reasoning']}\n")
     else:
         # Save to file for batch processing
         results_df.to_csv(config.DEEPSEEK_CSV_OUTPUT, index=False)
         print(f"\nFinal evaluation results saved to {config.DEEPSEEK_CSV_OUTPUT}")
+        
+        # Print only model answers and reasoning
+        for i, row in results_df.iterrows():
+            print(f"\n[{i+1}/{len(results_df)}]")
+            print(f"Model Answer: {row['nl_model_answer']}")
+            print(f"Reasoning: {row['nl_model_reasoning']}")
+            print("-" * 80)
+        
+        # Print accuracy statistics
+        correct_count = (results_df['correct_label'] == results_df['nl_model_answer']).sum()
+        accuracy = (correct_count / len(results_df)) * 100
+        print(f"\nACCURACY: {correct_count}/{len(results_df)} ({accuracy:.2f}%)")
 
     print("\n--- DeepSeek Experiment Complete ---")
